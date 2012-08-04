@@ -1,127 +1,134 @@
 package beerxml;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class RECIPE {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
-  private int VERSION;
+  @Element(required=true)
+  private double VERSION;
 
   // list values: Extract, Partial Mash, All Grain
-  @Element
+  @Element(required=true)
   private String TYPE;
 
-  @Element
+  @Element(required=true)
   private STYLE STYLE;
 
-  @Element
+  @Element(required=true)
   private String BREWER;
 
-  @Element
+  @Element(required=false)
   private String ASST_BREWER;
 
   // liters
-  @Element
+  @Element(required=true)
   private double BATCH_SIZE;
 
   // liters
-  @Element
+  @Element(required=true)
   private double BOIL_SIZE;
 
+  // minutes
+  @Element(required=true)
+  private double BOIL_TIME;
+
   // percent
-  @Element
+  @Element(required=false)
   private double EFFICIENCY;
 
-  @Element
+  @Element(required=true)
   private HOPS HOPS;
 
-  @Element
+  @Element(required=true)
   private FERMENTABLES FERMENTABLES;
 
-  @Element
+  @Element(required=true)
   private MISCS MISCS;
 
-  @Element
+  @Element(required=true)
   private YEASTS YEASTS;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
-  @Element
+  @Element(required=false)
   private String TASTE_NOTES;
 
   // 0-50.0
-  @Element
+  @Element(required=false)
   private double TASTE_RATING;
 
-  @Element
+  @Element(required=false)
   private double OG;
 
-  @Element
+  @Element(required=false)
   private double FG;
 
-  @Element
-  private int FERMENTATION_STAGES;
+  @Element(required=false)
+  private double FERMENTATION_STAGES;
 
   // days
-  @Element
-  private int PRIMARY_AGE;
+  @Element(required=false)
+  private double PRIMARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double PRIMARY_TEMP;
 
   // days
-  @Element
-  private int SECONDARY_AGE;
+  @Element(required=false)
+  private double SECONDARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double SECONDARY_TEMP;
 
   // days
-  @Element
-  private int TERTIARY_AGE;
+  @Element(required=false)
+  private double TERTIARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double TERTIARY_TEMP;
 
   // days
-  @Element
-  private int AGE;
+  @Element(required=false)
+  private double AGE;
 
   // C
-  @Element
-  private int AGE_TEMP;
+  @Element(required=false)
+  private double AGE_TEMP;
 
-  @Element
+  @Element(required=false)
   private String DATE;
 
-  @Element
+  @Element(required=false)
   private double CARBONATION;
 
   // really a bool.  default false.
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String FORCED_CARBONATION;
 
-  @Element
+  // should really be required
+  @Element(required=false)
   private String PRIMING_SUGAR_NAME;
 
-  // C
-  @Element
+  // C.  should really be required
+  @Element(required=false)
   private double CARBONATION_TEMP;
 
-  // used for math, if you arent using corn sugar
-  @Element
+  // used for math, if you arent using corn sugar.  should really be required.
+  @Element(required=false)
   private double PRIMING_SUGAR_EQUIV;
 
-  // used for math when kegging.
-  @Element
+  // used for math when kegging. should really be required.
+  @Element(required=false)
   private double KEG_PRIMING_FACTOR;
 
   public RECIPE() {
@@ -136,7 +143,7 @@ public class RECIPE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
@@ -177,6 +184,13 @@ public class RECIPE {
    */
   public double getBOIL_SIZE() {
     return BOIL_SIZE;
+  }
+
+  /**
+   * minutes
+   */
+  public double getBOIL_TIME() {
+    return BOIL_TIME;
   }
 
   /**
@@ -243,14 +257,14 @@ public class RECIPE {
 
   /**
    */
-  public int getFERMENTATION_STAGES() {
+  public double getFERMENTATION_STAGES() {
     return FERMENTATION_STAGES;
   }
 
   /**
    * days
    */
-  public int getPRIMARY_AGE() {
+  public double getPRIMARY_AGE() {
     return PRIMARY_AGE;
   }
 
@@ -264,7 +278,7 @@ public class RECIPE {
   /**
    * days
    */
-  public int getSECONDARY_AGE() {
+  public double getSECONDARY_AGE() {
     return SECONDARY_AGE;
   }
 
@@ -278,7 +292,7 @@ public class RECIPE {
   /**
    * days
    */
-  public int getTERTIARY_AGE() {
+  public double getTERTIARY_AGE() {
     return TERTIARY_AGE;
   }
 
@@ -292,14 +306,14 @@ public class RECIPE {
   /**
    * days
    */
-  public int getAGE() {
+  public double getAGE() {
     return AGE;
   }
 
   /**
    * C
    */
-  public int getAGE_TEMP() {
+  public double getAGE_TEMP() {
     return AGE_TEMP;
   }
 
@@ -324,27 +338,28 @@ public class RECIPE {
   }
 
   /**
+   * should really be required
    */
   public String getPRIMING_SUGAR_NAME() {
     return PRIMING_SUGAR_NAME;
   }
 
   /**
-   * C
+   * C.  should really be required
    */
   public double getCARBONATION_TEMP() {
     return CARBONATION_TEMP;
   }
 
   /**
-   * used for math, if you arent using corn sugar
+   * used for math, if you arent using corn sugar.  should really be required.
    */
   public double getPRIMING_SUGAR_EQUIV() {
     return PRIMING_SUGAR_EQUIV;
   }
 
   /**
-   * used for math when kegging.
+   * used for math when kegging. should really be required.
    */
   public double getKEG_PRIMING_FACTOR() {
     return KEG_PRIMING_FACTOR;
