@@ -3,6 +3,8 @@ package com.example.homebrewnavigator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.example.homebrewnavigator.bll.RecipeStep;
 public class BrewDayActivity extends Activity {
 	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
+	private Boolean mPaused = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,18 @@ public class BrewDayActivity extends Activity {
 	protected void updateFields() {
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		String currentUnits = currentStep.getUnits();
+		Object currentValue = currentStep.getValue();
+		Object targetValue = currentStep.getTarget();
 		
 		TextView tvCurrentValue = (TextView)mActivityBrewDay.findViewById(R.id.tvCurrentValue);
-		tvCurrentValue.setText(currentStep.getValue() + " " + currentStep.getUnits());
+		
+		if( currentValue != null && currentValue != "" && currentUnits != null && currentUnits != "" ){
+			tvCurrentValue.setText(currentValue + " " + currentUnits);			
+		}
+		else
+		{
+			tvCurrentValue.setText("");
+		}
 
 		TextView tvCurrentInstruction = (TextView)mActivityBrewDay.findViewById(R.id.tvCurrentInstruction);
 		tvCurrentInstruction.setText(currentStep.getInstruction());
@@ -49,9 +61,9 @@ public class BrewDayActivity extends Activity {
 		TextView tvTimeRemainingValue = (TextView)mActivityBrewDay.findViewById(R.id.tvTimeRemainingValue);
 		TextView tvTimeRemainingText = (TextView)mActivityBrewDay.findViewById(R.id.tvTimeRemainingText);
 
-		if( currentUnits != null && currentUnits != "" && currentStep.getTarget() != null && currentStep.getValue() != null)
+		if( currentUnits != null && currentUnits != "" && targetValue != null && currentValue != null)
 		{
-		    tvTimeRemainingValue.setText(""+((Integer)currentStep.getTarget() - (Integer)currentStep.getValue()));
+		    tvTimeRemainingValue.setText(""+((Integer)targetValue - (Integer)currentValue));
 			tvTimeRemainingText.setText(currentUnits + " remaining");
 		}
 		else
@@ -89,12 +101,54 @@ public class BrewDayActivity extends Activity {
     }
     
     public void pauseHandler(View v) {
-    	// TODO: add logic to pause / unpause current timer
+    	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
+    	if( mPaused ){
+    		// TODO: handle unpausing
+    		pause.setText("Pause");
+    	}
+    	else
+    	{
+    		// TODO: handle pausing
+    		pause.setText("Play");
+    	}
+    	mPaused = !mPaused;
     }
     
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() { 
+        @Override 
+        public void onClick(DialogInterface dialog, int which) { 
+            switch (which){ 
+            case DialogInterface.BUTTON_POSITIVE: 
+                //Yes button clicked 
+            	finish();
+                break; 
+     
+            case DialogInterface.BUTTON_NEGATIVE: 
+                //No button clicked 
+                break; 
+            } 
+        } 
+    }; 
+     
     public void doneHandler(View v) {
-    	// TODO: add logic to mark recipe as done
+    	if( mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0 ){
+    	    AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+    	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener) 
+    	        .setNegativeButton("No", dialogClickListener).show(); 
+    	}
+    	else
+    	{
+	        finish();
+    	}
     }
+
+	@Override
+	public void finish() {
+    	// TODO: add logic to mark recipe as done
+		super.finish();
+	}
+    
+    
     
 
 	
