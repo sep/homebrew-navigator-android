@@ -1,7 +1,9 @@
 package beerxml;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class STYLE {
 
   @Element(required=true)

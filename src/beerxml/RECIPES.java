@@ -4,7 +4,7 @@ import java.util.List;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
-@Root
+@Root(strict=false)
 public class RECIPES {
 
   @ElementList(required=true, inline=true)
