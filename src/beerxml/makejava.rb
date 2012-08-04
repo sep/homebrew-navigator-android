@@ -1,12 +1,10 @@
 classes = {
-  "RECIPES" => [{name: "theRecipes", required: true, type: 'Recipe[]', elementtag: "@ElementArray"}],
-  "MISCS" => [{name: "theMiscs", required: true, type: 'Misc[]', elementtag: "@ElementArray"}],
-  "WATERS" => [{name: "theWaters", required: true, type: 'Water[]', elementtag: "@ElementArray"}],
-  "STYLES" => [{name: "theStyles", required: true, type: 'Style[]', elementtag: "@ElementArray"}],
-  "YEASTS" => [{name: "theYeasts", required: true, type: 'Yeast[]', elementtag: "@ElementArray"}],
-  "HOPS" => [{name: "theHops", required: true, type: 'Hop[]', elementtag: "@ElementArray"}],
-  "FERMENTABLES" => [{name: "theFermentables", required: true, type: 'Fermentable[]', elementtag: "@ElementArray"}],
-  "YEASTS" => [{name: "theYeasts", required: true, type: 'Yeast[]', elementtag: "@ElementArray"}],
+  "RECIPES" => [{name: "theRecipes", required: true, type: 'List<RECIPE>', elementtag: "@ElementList"}],
+  "MISCS" => [{name: "theMiscs", required: true, type: 'List<MISC>', elementtag: "@ElementList"}],
+  "STYLES" => [{name: "theStyles", required: true, type: 'List<STYLE>', elementtag: "@ElementList"}],
+  "YEASTS" => [{name: "theYeasts", required: true, type: 'List<YEAST>', elementtag: "@ElementList"}],
+  "HOPS" => [{name: "theHops", required: true, type: 'List<HOP>', elementtag: "@ElementList"}],
+  "FERMENTABLES" => [{name: "theFermentables", required: true, type: 'List<FERMENTABLE>', elementtag: "@ElementList"}],
   "HOP" => [{name: "NAME", required: true, type: 'String'},
                      {name: "VERSION", required: true, type: 'int'},
                      {name: "ALPHA", required: true, type: 'double'},
@@ -35,10 +33,10 @@ classes = {
                      {name: 'ORIGIN', required: false, type: 'String'},
                      {name: 'SUPPLIER', required: false, type: 'String'},
                      {name: 'NOTES', required: false, type: 'String'},
-                     {name: 'COARSE_FINE_DIFF', required: false, type: 'double', comment: 'percent.  only really makes sense for grain or adjunct type.'},
-                     {name: 'MOISTURE', required: false, type: 'double', comment: 'percent.  only appropriate for grain or adjunct'},
-                     {name: 'DIASTIC_POWER', required: false, type: 'double', comment: 'only appropriate for grain or adjunct.'},
-                     {name: 'PROTEIN', required: false, type: 'double', comment: 'percent.  only appropriate for grain or adjunct.'},
+                     {name: 'COARSE_FINE_DIFF', required: false, type: 'String', comment: '(double) percent.  only really makes sense for grain or adjunct type.'},
+                     {name: 'MOISTURE', required: false, type: 'String', comment: '(double) percent.  only appropriate for grain or adjunct'},
+                     {name: 'DIASTIC_POWER', required: false, type: 'String', comment: '(double) only appropriate for grain or adjunct.'},
+                     {name: 'PROTEIN', required: false, type: 'String', comment: '(double) percent.  only appropriate for grain or adjunct.'},
                      {name: 'MAX_IN_BATCH', required: false, type: 'double', comment: 'percent.'},
                      {name: 'RECOMMENDED_MASH', required: false, type: 'String', comment: 'really a bool.', list:['TRUE', 'FALSE']},
                      {name: 'IBU_GAL_PER_LB', required: false, type: 'double', comment: 'useful for calculating IBU'},
@@ -96,10 +94,10 @@ classes = {
                      {name: 'OG_MAX', required: true, type: 'double'},
                      {name: 'FG_MIN', required: true, type: 'double'},
                      {name: 'FG_MAX', required: true, type: 'double'},
-                     {name: 'IBU_MIN', required: true, type: 'int'},
-                     {name: 'IBU_MAX', required: true, type: 'int'},
-                     {name: 'COLOR_MIN', required: true, type: 'int'},
-                     {name: 'COLOR_MAX', required: true, type: 'int'},
+                     {name: 'IBU_MIN', required: true, type: 'double'},
+                     {name: 'IBU_MAX', required: true, type: 'double'},
+                     {name: 'COLOR_MIN', required: true, type: 'double'},
+                     {name: 'COLOR_MAX', required: true, type: 'double'},
                      {name: 'CARB_MIN', required: false, type: 'double'},
                      {name: 'CARB_MAX', required: false, type: 'double'},
                      {name: 'ABV_MIN', required: false, type: 'double'},
@@ -113,11 +111,12 @@ classes = {
                      {name: 'NAME', required: true, type: 'String'},
                      {name: 'VERSION', required: true, type: 'int'},
                      {name: 'TYPE', required: true, type: 'String', list:['Extract', 'Partial Mash', 'All Grain']},
-                     {name: 'STYLE', required: true, type: 'Style'},
+                     {name: 'STYLE', required: true, type: 'STYLE'},
                      {name: 'BREWER', required: true, type: 'String'},
                      {name: 'ASST_BREWER', required: false, type: 'String'},
                      {name: 'BATCH_SIZE', required: true, type: 'double', comment:'liters'},
                      {name: 'BOIL_SIZE', required: true, type: 'double', comment:'liters'},
+                     {name: 'BOIL_TIME', required: true, type: 'double', comment:'minutes'},
                      {name: 'EFFICIENCY', required: false, type: 'double', comment:'percent'},
                      {name: 'HOPS', required: true, type: 'HOPS'},
                      {name: 'FERMENTABLES', required: true, type: 'FERMENTABLES'},
@@ -149,13 +148,26 @@ classes = {
 
 classes.each_key do |class_name|
   File.open("#{class_name}.java", 'w') do |f|
+    is_plural = class_name[-1] == "S"
+
+    f.puts 'package beerxml;'
+    f.puts ''
+    f.puts 'import java.util.List;' if is_plural
+    f.puts 'import org.simpleframework.xml.ElementList;' if is_plural
+    f.puts 'import org.simpleframework.xml.Element;' unless is_plural
+    f.puts 'import org.simpleframework.xml.Root;'
+    f.puts ''
+    f.puts '@Root(strict=false)'
     f.puts "public class #{class_name} {"
     f.puts ""
 
     classes[class_name].each do |field|
       f.puts "  // #{field[:comment]}" if field[:comment]
       f.puts "  // list values: #{field[:list].join(', ')}" if field[:list]
-      f.puts field[:elementtag] ? "  #{field[:elementtag]}" : "  @Element"
+
+      is_list = !field[:elementtag].nil?
+
+      f.puts (is_list ? "  #{field[:elementtag]}" : "  @Element") + "(required=#{field[:required]}" + (is_list ? ", inline=true" : "") + ")"
       f.puts "  private #{field[:type]} #{field[:name]};"
       f.puts ""
     end
