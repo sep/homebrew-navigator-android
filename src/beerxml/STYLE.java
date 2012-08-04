@@ -41,16 +41,16 @@ public class STYLE {
   private double FG_MAX;
 
   @Element(required=true)
-  private int IBU_MIN;
+  private double IBU_MIN;
 
   @Element(required=true)
-  private int IBU_MAX;
+  private double IBU_MAX;
 
   @Element(required=true)
-  private int COLOR_MIN;
+  private double COLOR_MIN;
 
   @Element(required=true)
-  private int COLOR_MAX;
+  private double COLOR_MAX;
 
   @Element(required=false)
   private double CARB_MIN;
@@ -149,25 +149,25 @@ public class STYLE {
 
   /**
    */
-  public int getIBU_MIN() {
+  public double getIBU_MIN() {
     return IBU_MIN;
   }
 
   /**
    */
-  public int getIBU_MAX() {
+  public double getIBU_MAX() {
     return IBU_MAX;
   }
 
   /**
    */
-  public int getCOLOR_MIN() {
+  public double getCOLOR_MIN() {
     return COLOR_MIN;
   }
 
   /**
    */
-  public int getCOLOR_MAX() {
+  public double getCOLOR_MAX() {
     return COLOR_MAX;
   }
 
