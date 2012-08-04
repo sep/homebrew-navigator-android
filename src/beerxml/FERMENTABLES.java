@@ -5,7 +5,7 @@ import org.simpleframework.xml.ElementList;
 
 public class FERMENTABLES {
 
-  @ElementList(required=true)
+  @ElementList(required=true, inline=true)
   private List<FERMENTABLE> theFermentables;
 
   public FERMENTABLES() {

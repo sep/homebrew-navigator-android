@@ -5,7 +5,7 @@ import org.simpleframework.xml.ElementList;
 
 public class STYLES {
 
-  @ElementList(required=true)
+  @ElementList(required=true, inline=true)
   private List<STYLE> theStyles;
 
   public STYLES() {

@@ -5,7 +5,7 @@ import org.simpleframework.xml.ElementList;
 
 public class MISCS {
 
-  @ElementList(required=true)
+  @ElementList(required=true, inline=true)
   private List<MISC> theMiscs;
 
   public MISCS() {

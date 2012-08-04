@@ -5,7 +5,7 @@ import org.simpleframework.xml.ElementList;
 
 public class HOPS {
 
-  @ElementList(required=true)
+  @ElementList(required=true, inline=true)
   private List<HOP> theHops;
 
   public HOPS() {
