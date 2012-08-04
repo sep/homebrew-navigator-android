@@ -29,11 +29,22 @@ public class RecipeBookTest extends TestCase {
 	
 	public void testFireStepCriteriaMetIntentWhenWhenTimesUp() throws InterruptedException{
 		Recipe r = daBook.GetRecipe("My Special Brew");
-		TimedStep step2 = new TimedStep(1); 
-		
+		MockAlarmManager d = new MockAlarmManager();		
+		TimedStep step2 = new TimedStep(1, d); 
+		r.addStep(step2);
 		RecipeStep rs = r.getCurrentStep();
-		//Thread.sleep(100000);	
-		
+				
+		Assert.assertTrue(d.fired);				
+	}
+	
+	public void testFireIntentStepCriteriaMetTargetForTemperature(){
+		Recipe r = daBook.GetRecipe("My Special Brew");
+		MockIntentDispatcher d = new MockIntentDispatcher();		
+		TimedStep step2 = new TimedStep(1, d); 
+		r.addStep(step2);
+		RecipeStep rs = r.getCurrentStep();
+				
+		Assert.assertTrue(d.fired);		
 	}
 	
 	//TODO: Need a way to tell the step to start executing

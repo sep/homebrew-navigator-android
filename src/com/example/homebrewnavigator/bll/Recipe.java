@@ -28,14 +28,17 @@ public class Recipe {
 	public RecipeStep getCurrentStep() {
 		if (steps.isEmpty() || currentIndex >= steps.size())
 			return null;	
-			
-		return (RecipeStep)steps.get(findNextStepIndex());
+		
+		RecipeStep step = (RecipeStep)steps.get(findNextStepIndex());
+		step.execute();
+		
+		return step;
 	}
 
 	public List<RecipeStep> getNextSteps() {	
 		if (findNextStepIndex() == -1)
 			return new ArrayList<RecipeStep>();
-		
+				
 		return steps.subList(findNextStepIndex()+1, steps.size());
 	}
 	

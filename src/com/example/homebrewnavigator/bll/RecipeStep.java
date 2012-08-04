@@ -17,7 +17,7 @@ public abstract class RecipeStep<T> {
 		return actualValue;
 	}
 		
-	public abstract Boolean canMovetoNextStep();
+	public abstract void execute();
 
 	public boolean getIsNotCompleted() {		
 		return !isCompleted;

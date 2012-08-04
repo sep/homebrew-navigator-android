@@ -2,10 +2,14 @@ package com.example.homebrewnavigator.bll;
 
 public class TemperatureStep extends RecipeStep<Integer> {
 
+	private IIntentDispatcher dispatcher; 
+	public TemperatureStep(int i, IIntentDispatcher d) {
+		dispatcher = d;
+	}
+
 	@Override
-	public Boolean canMovetoNextStep() {
-		// TODO Auto-generated method stub
-		return null;
+	public void execute() {
+		// TODO Auto-generated method stub		
 	}
 
 }

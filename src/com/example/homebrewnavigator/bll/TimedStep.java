@@ -1,14 +1,20 @@
 package com.example.homebrewnavigator.bll;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class TimedStep extends RecipeStep<Integer>{
-	public TimedStep(int t) {
-		target = t;
-		units = "Minutes";		
+	private IAlarmManager dispatcher;	
+	
+
+	public TimedStep(int t, IAlarmManager dis, I) {
+		target = t;	
+		units = "Minutes";			
+		dispatcher = dis;
 	}
 
 	@Override
-	public Boolean canMovetoNextStep() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void execute() {
+		dispatcher.schduledTimeStepTimerToFire(target);	
+	}		
 }
