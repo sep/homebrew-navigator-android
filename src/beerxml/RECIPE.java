@@ -127,8 +127,8 @@ public class RECIPE {
   @Element(required=false)
   private double PRIMING_SUGAR_EQUIV;
 
-  // used for math when kegging.
-  @Element(required=true)
+  // used for math when kegging. should really be required.
+  @Element(required=false)
   private double KEG_PRIMING_FACTOR;
 
   public RECIPE() {
@@ -359,7 +359,7 @@ public class RECIPE {
   }
 
   /**
-   * used for math when kegging.
+   * used for math when kegging. should really be required.
    */
   public double getKEG_PRIMING_FACTOR() {
     return KEG_PRIMING_FACTOR;

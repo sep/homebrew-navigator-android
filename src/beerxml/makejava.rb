@@ -142,7 +142,7 @@ classes = {
                      {name: 'PRIMING_SUGAR_NAME', required: false, type: 'String', comment: 'should really be required'},
                      {name: 'CARBONATION_TEMP', required: false, type: 'double', comment:'C.  should really be required'},
                      {name: 'PRIMING_SUGAR_EQUIV', required: false, type: 'double', comment: 'used for math, if you arent using corn sugar.  should really be required.'},
-                     {name: 'KEG_PRIMING_FACTOR', required: true, type: 'double', comment: 'used for math when kegging.'}
+                     {name: 'KEG_PRIMING_FACTOR', required: false, type: 'double', comment: 'used for math when kegging. should really be required.'}
   ]
 }
 
