@@ -3,11 +3,15 @@ package com.example.homebrewnavigator;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BrewDayActivity extends Activity {
 	private RelativeLayout mActivityBrewDay = null;
@@ -18,6 +22,30 @@ public class BrewDayActivity extends Activity {
         Resources res = getResources();
         mActivityBrewDay = (RelativeLayout)getLayoutInflater().inflate(R.layout.activity_brew_day,null);
         setContentView(mActivityBrewDay);
+        BroadcastReceiver r = new BroadcastReceiver(){
+        	
+        	@Override
+        	public void onReceive(Context context, Intent intent) {
+        		if (intent.getType() == "timedStepComplete"){
+        			DoSomethingWithTime();
+        		}
+        		
+        		if (intent.getType() == "temperatureReached"){
+        			DoSomethingWithTemp();
+        		}
+        		
+        	}
+
+			private void DoSomethingWithTemp() {
+				Toast.makeText(MyContext.getContext(), "Do Something with temp", 500);
+				
+			}
+
+			private void DoSomethingWithTime() {
+				Toast.makeText(MyContext.getContext(), "Do Something with time", 500);
+				
+			}
+        };
     }
 
 	@Override

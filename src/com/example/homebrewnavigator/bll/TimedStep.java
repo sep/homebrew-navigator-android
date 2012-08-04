@@ -4,10 +4,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimedStep extends RecipeStep<Integer>{
-	private IAlarmManager dispatcher;	
+	private IAlarmSetter dispatcher;	
 	
 
-	public TimedStep(int t, IAlarmManager dis, I) {
+	public TimedStep(int t, IAlarmSetter dis) {
 		target = t;	
 		units = "Minutes";			
 		dispatcher = dis;

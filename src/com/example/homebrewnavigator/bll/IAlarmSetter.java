@@ -1,5 +1,5 @@
 package com.example.homebrewnavigator.bll;
 
-public interface IAlarmManager {
+public interface IAlarmSetter {
 	void schduledTimeStepTimerToFire(int minutes);
 }

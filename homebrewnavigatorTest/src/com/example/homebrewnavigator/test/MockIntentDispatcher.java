@@ -8,6 +8,6 @@ public class MockIntentDispatcher implements IIntentDispatcher {
 	@Override
 	public void fireStepCompleteIntent() {
 		fireWasCalled = true;		
-	}
+	}	
 
 }

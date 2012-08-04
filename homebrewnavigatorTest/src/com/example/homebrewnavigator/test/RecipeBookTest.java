@@ -13,11 +13,8 @@ public class RecipeBookTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {		
-		super.setUp();
-		
-		
-		daBook = new RecipeBook(new FakeRecipeRepository());
-		
+		super.setUp();		
+		daBook = new RecipeBook(new FakeRecipeRepository());		
 	}
 
 	public void testGetRecipeWillReturnMyRecipeByName(){
@@ -39,7 +36,7 @@ public class RecipeBookTest extends TestCase {
 	
 	public void testFireIntentStepCriteriaMetTargetForTemperature(){
 		Recipe r = daBook.GetRecipe("My Special Brew");
-		MockIntentDispatcher d = new MockIntentDispatcher();		
+		MockAlarmManager d = new MockAlarmManager();		
 		TimedStep step2 = new TimedStep(1, d); 
 		r.addStep(step2);
 		RecipeStep rs = r.getCurrentStep();

@@ -41,7 +41,7 @@ public class TemperatureService extends NonStopIntentService {
 
 	public class TemperatureBinder extends Binder {
 		
-		TemperatureService getService()
+		public TemperatureService getService()
 		{
 			return TemperatureService.this;
 		}
