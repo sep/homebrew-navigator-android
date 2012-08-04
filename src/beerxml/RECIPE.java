@@ -10,7 +10,7 @@ public class RECIPE {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   // list values: Extract, Partial Mash, All Grain
   @Element(required=true)
@@ -70,11 +70,11 @@ public class RECIPE {
   private double FG;
 
   @Element(required=false)
-  private int FERMENTATION_STAGES;
+  private double FERMENTATION_STAGES;
 
   // days
   @Element(required=false)
-  private int PRIMARY_AGE;
+  private double PRIMARY_AGE;
 
   // C
   @Element(required=false)
@@ -82,7 +82,7 @@ public class RECIPE {
 
   // days
   @Element(required=false)
-  private int SECONDARY_AGE;
+  private double SECONDARY_AGE;
 
   // C
   @Element(required=false)
@@ -90,7 +90,7 @@ public class RECIPE {
 
   // days
   @Element(required=false)
-  private int TERTIARY_AGE;
+  private double TERTIARY_AGE;
 
   // C
   @Element(required=false)
@@ -98,11 +98,11 @@ public class RECIPE {
 
   // days
   @Element(required=false)
-  private int AGE;
+  private double AGE;
 
   // C
   @Element(required=false)
-  private int AGE_TEMP;
+  private double AGE_TEMP;
 
   @Element(required=false)
   private String DATE;
@@ -142,7 +142,7 @@ public class RECIPE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
@@ -256,14 +256,14 @@ public class RECIPE {
 
   /**
    */
-  public int getFERMENTATION_STAGES() {
+  public double getFERMENTATION_STAGES() {
     return FERMENTATION_STAGES;
   }
 
   /**
    * days
    */
-  public int getPRIMARY_AGE() {
+  public double getPRIMARY_AGE() {
     return PRIMARY_AGE;
   }
 
@@ -277,7 +277,7 @@ public class RECIPE {
   /**
    * days
    */
-  public int getSECONDARY_AGE() {
+  public double getSECONDARY_AGE() {
     return SECONDARY_AGE;
   }
 
@@ -291,7 +291,7 @@ public class RECIPE {
   /**
    * days
    */
-  public int getTERTIARY_AGE() {
+  public double getTERTIARY_AGE() {
     return TERTIARY_AGE;
   }
 
@@ -305,14 +305,14 @@ public class RECIPE {
   /**
    * days
    */
-  public int getAGE() {
+  public double getAGE() {
     return AGE;
   }
 
   /**
    * C
    */
-  public int getAGE_TEMP() {
+  public double getAGE_TEMP() {
     return AGE_TEMP;
   }
 

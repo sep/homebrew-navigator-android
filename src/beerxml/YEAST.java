@@ -10,7 +10,7 @@ public class YEAST {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   // list values: Ale, Lager, Wheat, Wine, Champagne
   @Element(required=true)
@@ -57,10 +57,10 @@ public class YEAST {
 
   // number of times reused
   @Element(required=false)
-  private int TIMES_CULTURED;
+  private double TIMES_CULTURED;
 
   @Element(required=false)
-  private int MAX_REUSE;
+  private double MAX_REUSE;
 
   // for secondary fermentation. default FALSE.
   // list values: TRUE, FALSE
@@ -79,7 +79,7 @@ public class YEAST {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
@@ -165,13 +165,13 @@ public class YEAST {
   /**
    * number of times reused
    */
-  public int getTIMES_CULTURED() {
+  public double getTIMES_CULTURED() {
     return TIMES_CULTURED;
   }
 
   /**
    */
-  public int getMAX_REUSE() {
+  public double getMAX_REUSE() {
     return MAX_REUSE;
   }
 

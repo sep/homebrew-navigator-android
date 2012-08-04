@@ -10,7 +10,7 @@ public class FERMENTABLE {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   // list values: Grain, Sugar, Extract, Dry Extract, Adjunct
   @Element(required=true)
@@ -83,7 +83,7 @@ public class FERMENTABLE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 

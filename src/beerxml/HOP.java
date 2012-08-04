@@ -10,7 +10,7 @@ public class HOP {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   @Element(required=true)
   private double ALPHA;
@@ -79,7 +79,7 @@ public class HOP {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 

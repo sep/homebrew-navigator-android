@@ -10,7 +10,7 @@ public class MISC {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   // list values: Spice, Fining, Water Agent, Herb, Flavor, Other
   @Element(required=true)
@@ -51,7 +51,7 @@ public class MISC {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 

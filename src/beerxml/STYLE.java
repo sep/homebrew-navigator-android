@@ -10,7 +10,7 @@ public class STYLE {
   private String NAME;
 
   @Element(required=true)
-  private int VERSION;
+  private double VERSION;
 
   @Element(required=true)
   private String CATEGORY;
@@ -88,7 +88,7 @@ public class STYLE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
