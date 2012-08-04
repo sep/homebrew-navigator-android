@@ -1,6 +1,7 @@
 
     <resources>
-        <string-array name="fakeUpcomingSteps"><item>Steep Grain</item>
+        <string-array name="fakeUpcomingSteps">
+            <item>Steep Grain</item>
             <item>Add Extract</item>
             <item>Bring to Boil</item>
             <item>Add Glacier Hops</item>
