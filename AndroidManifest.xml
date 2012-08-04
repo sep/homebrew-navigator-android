@@ -47,6 +47,8 @@
             </intent-filter>
         </activity>
         
+        <service android:enabled="true" android:name=".TemperatureService" android:label="HomebrewNavigator Temperature Monitoring Service" android:exported="false" />
+        
     </application>
 
 </manifest>
