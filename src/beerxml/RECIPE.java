@@ -119,8 +119,8 @@ public class RECIPE {
   @Element(required=false)
   private String PRIMING_SUGAR_NAME;
 
-  // C
-  @Element(required=true)
+  // C.  should really be required
+  @Element(required=false)
   private double CARBONATION_TEMP;
 
   // used for math, if you arent using corn sugar
@@ -345,7 +345,7 @@ public class RECIPE {
   }
 
   /**
-   * C
+   * C.  should really be required
    */
   public double getCARBONATION_TEMP() {
     return CARBONATION_TEMP;
