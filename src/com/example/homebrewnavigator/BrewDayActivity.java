@@ -66,13 +66,10 @@ public class BrewDayActivity extends Activity {
 		List<RecipeStep> nextSteps = mRecipe.getNextSteps();
 	    ListView lvUpcomingSteps = (ListView)mActivityBrewDay.findViewById(R.id.lvUpcomingSteps);
 
-//	    if( nextSteps != null && nextSteps.size() > 0 )
-//		{
-		    UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
+        UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
 		
-		    lvUpcomingSteps.setAdapter(laUpcomingSteps);
-//		}
-//		else
+	    lvUpcomingSteps.setAdapter(laUpcomingSteps);
+
 		if( nextSteps == null || nextSteps.size() == 0 )
 		{
 	    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
