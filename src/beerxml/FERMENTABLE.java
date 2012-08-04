@@ -4,69 +4,69 @@ import org.simpleframework.xml.Element;
 
 public class FERMENTABLE {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
+  @Element(required=true)
   private int VERSION;
 
   // list values: Grain, Sugar, Extract, Dry Extract, Adjunct
-  @Element
+  @Element(required=true)
   private String TYPE;
 
   // kg
-  @Element
+  @Element(required=true)
   private double AMOUNT;
 
   // percent
-  @Element
+  @Element(required=true)
   private double YIELD;
 
   // Lovibond
-  @Element
+  @Element(required=true)
   private double COLOR;
 
   // actually bool
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String ADD_AFTER_BOIL;
 
-  @Element
+  @Element(required=false)
   private String ORIGIN;
 
-  @Element
+  @Element(required=false)
   private String SUPPLIER;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
   // percent.  only really makes sense for grain or adjunct type.
-  @Element
+  @Element(required=false)
   private double COARSE_FINE_DIFF;
 
   // percent.  only appropriate for grain or adjunct
-  @Element
+  @Element(required=false)
   private double MOISTURE;
 
   // only appropriate for grain or adjunct.
-  @Element
+  @Element(required=false)
   private double DIASTIC_POWER;
 
   // percent.  only appropriate for grain or adjunct.
-  @Element
+  @Element(required=false)
   private double PROTEIN;
 
   // percent.
-  @Element
+  @Element(required=false)
   private double MAX_IN_BATCH;
 
   // really a bool.
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String RECOMMENDED_MASH;
 
   // useful for calculating IBU
-  @Element
+  @Element(required=false)
   private double IBU_GAL_PER_LB;
 
   public FERMENTABLE() {

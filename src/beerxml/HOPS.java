@@ -1,11 +1,12 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
 
 public class HOPS {
 
-  @ElementArray
-  private HOP[] theHops;
+  @ElementList(required=true)
+  private List<HOP> theHops;
 
   public HOPS() {
     super();
@@ -13,7 +14,7 @@ public class HOPS {
 
   /**
    */
-  public HOP[] gettheHops() {
+  public List<HOP> gettheHops() {
     return theHops;
   }
 }

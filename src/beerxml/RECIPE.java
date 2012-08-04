@@ -4,124 +4,124 @@ import org.simpleframework.xml.Element;
 
 public class RECIPE {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
+  @Element(required=true)
   private int VERSION;
 
   // list values: Extract, Partial Mash, All Grain
-  @Element
+  @Element(required=true)
   private String TYPE;
 
-  @Element
+  @Element(required=true)
   private STYLE STYLE;
 
-  @Element
+  @Element(required=true)
   private String BREWER;
 
-  @Element
+  @Element(required=false)
   private String ASST_BREWER;
 
   // liters
-  @Element
+  @Element(required=true)
   private double BATCH_SIZE;
 
   // liters
-  @Element
+  @Element(required=true)
   private double BOIL_SIZE;
 
   // percent
-  @Element
+  @Element(required=false)
   private double EFFICIENCY;
 
-  @Element
+  @Element(required=true)
   private HOPS HOPS;
 
-  @Element
+  @Element(required=true)
   private FERMENTABLES FERMENTABLES;
 
-  @Element
+  @Element(required=true)
   private MISCS MISCS;
 
-  @Element
+  @Element(required=true)
   private YEASTS YEASTS;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
-  @Element
+  @Element(required=false)
   private String TASTE_NOTES;
 
   // 0-50.0
-  @Element
+  @Element(required=false)
   private double TASTE_RATING;
 
-  @Element
+  @Element(required=false)
   private double OG;
 
-  @Element
+  @Element(required=false)
   private double FG;
 
-  @Element
+  @Element(required=false)
   private int FERMENTATION_STAGES;
 
   // days
-  @Element
+  @Element(required=false)
   private int PRIMARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double PRIMARY_TEMP;
 
   // days
-  @Element
+  @Element(required=false)
   private int SECONDARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double SECONDARY_TEMP;
 
   // days
-  @Element
+  @Element(required=false)
   private int TERTIARY_AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private double TERTIARY_TEMP;
 
   // days
-  @Element
+  @Element(required=false)
   private int AGE;
 
   // C
-  @Element
+  @Element(required=false)
   private int AGE_TEMP;
 
-  @Element
+  @Element(required=false)
   private String DATE;
 
-  @Element
+  @Element(required=false)
   private double CARBONATION;
 
   // really a bool.  default false.
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String FORCED_CARBONATION;
 
-  @Element
+  @Element(required=true)
   private String PRIMING_SUGAR_NAME;
 
   // C
-  @Element
+  @Element(required=true)
   private double CARBONATION_TEMP;
 
   // used for math, if you arent using corn sugar
-  @Element
+  @Element(required=true)
   private double PRIMING_SUGAR_EQUIV;
 
   // used for math when kegging.
-  @Element
+  @Element(required=true)
   private double KEG_PRIMING_FACTOR;
 
   public RECIPE() {

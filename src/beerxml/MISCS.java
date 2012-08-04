@@ -1,11 +1,12 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
 
 public class MISCS {
 
-  @ElementArray
-  private MISC[] theMiscs;
+  @ElementList(required=true)
+  private List<MISC> theMiscs;
 
   public MISCS() {
     super();
@@ -13,7 +14,7 @@ public class MISCS {
 
   /**
    */
-  public MISC[] gettheMiscs() {
+  public List<MISC> gettheMiscs() {
     return theMiscs;
   }
 }

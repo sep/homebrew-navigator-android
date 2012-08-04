@@ -1,11 +1,12 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
 
 public class FERMENTABLES {
 
-  @ElementArray
-  private FERMENTABLE[] theFermentables;
+  @ElementList(required=true)
+  private List<FERMENTABLE> theFermentables;
 
   public FERMENTABLES() {
     super();
@@ -13,7 +14,7 @@ public class FERMENTABLES {
 
   /**
    */
-  public FERMENTABLE[] gettheFermentables() {
+  public List<FERMENTABLE> gettheFermentables() {
     return theFermentables;
   }
 }

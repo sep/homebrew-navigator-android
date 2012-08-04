@@ -1,11 +1,12 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
 
 public class STYLES {
 
-  @ElementArray
-  private STYLE[] theStyles;
+  @ElementList(required=true)
+  private List<STYLE> theStyles;
 
   public STYLES() {
     super();
@@ -13,7 +14,7 @@ public class STYLES {
 
   /**
    */
-  public STYLE[] gettheStyles() {
+  public List<STYLE> gettheStyles() {
     return theStyles;
   }
 }

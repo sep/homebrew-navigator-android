@@ -4,65 +4,65 @@ import org.simpleframework.xml.Element;
 
 public class HOP {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
+  @Element(required=true)
   private int VERSION;
 
-  @Element
+  @Element(required=true)
   private double ALPHA;
 
-  @Element
+  @Element(required=true)
   private double AMOUNT;
 
   // list values: Boil, Dry Hop, Mash, First Wort, Aroma
-  @Element
+  @Element(required=true)
   private String USE;
 
   // minutes
-  @Element
+  @Element(required=true)
   private double TIME;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
   // list values: Bittering, Aroma, Both
-  @Element
+  @Element(required=false)
   private String TYPE;
 
   // list values: Pellet, Plug, Leaf
-  @Element
+  @Element(required=false)
   private String FORM;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double BETA;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double HSI;
 
-  @Element
+  @Element(required=false)
   private String ORIGIN;
 
-  @Element
+  @Element(required=false)
   private String SUBSTITUTES;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double HUMULENE;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double CARYOPHYLLENE;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double COHUMULONE;
 
   // percentage
-  @Element
+  @Element(required=false)
   private double MYRCENE;
 
   public HOP() {
