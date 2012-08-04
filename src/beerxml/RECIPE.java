@@ -115,7 +115,8 @@ public class RECIPE {
   @Element(required=false)
   private String FORCED_CARBONATION;
 
-  @Element(required=true)
+  // should really be required
+  @Element(required=false)
   private String PRIMING_SUGAR_NAME;
 
   // C
@@ -337,6 +338,7 @@ public class RECIPE {
   }
 
   /**
+   * should really be required
    */
   public String getPRIMING_SUGAR_NAME() {
     return PRIMING_SUGAR_NAME;
