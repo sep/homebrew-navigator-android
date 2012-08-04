@@ -1,40 +1,42 @@
 package beerxml;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class MISC {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
-  private int VERSION;
+  @Element(required=true)
+  private double VERSION;
 
   // list values: Spice, Fining, Water Agent, Herb, Flavor, Other
-  @Element
+  @Element(required=true)
   private String TYPE;
 
   // list values: Boil, Mash, Primary, Secondary, Bottling
-  @Element
+  @Element(required=true)
   private String USE;
 
   // minutes
-  @Element
+  @Element(required=true)
   private double TIME;
 
   // volume or weight.  kg or L
-  @Element
+  @Element(required=true)
   private double AMOUNT;
 
   // really a bool.  defaults to false
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String AMOUNT_IS_WEIGHT;
 
-  @Element
+  @Element(required=false)
   private String USE_FOR;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
   public MISC() {
@@ -49,7 +51,7 @@ public class MISC {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 

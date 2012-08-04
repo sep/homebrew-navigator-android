@@ -1,72 +1,74 @@
 package beerxml;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class FERMENTABLE {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
-  private int VERSION;
+  @Element(required=true)
+  private double VERSION;
 
   // list values: Grain, Sugar, Extract, Dry Extract, Adjunct
-  @Element
+  @Element(required=true)
   private String TYPE;
 
   // kg
-  @Element
+  @Element(required=true)
   private double AMOUNT;
 
   // percent
-  @Element
+  @Element(required=true)
   private double YIELD;
 
   // Lovibond
-  @Element
+  @Element(required=true)
   private double COLOR;
 
   // actually bool
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String ADD_AFTER_BOIL;
 
-  @Element
+  @Element(required=false)
   private String ORIGIN;
 
-  @Element
+  @Element(required=false)
   private String SUPPLIER;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
-  // percent.  only really makes sense for grain or adjunct type.
-  @Element
-  private double COARSE_FINE_DIFF;
+  // (double) percent.  only really makes sense for grain or adjunct type.
+  @Element(required=false)
+  private String COARSE_FINE_DIFF;
 
-  // percent.  only appropriate for grain or adjunct
-  @Element
-  private double MOISTURE;
+  // (double) percent.  only appropriate for grain or adjunct
+  @Element(required=false)
+  private String MOISTURE;
 
-  // only appropriate for grain or adjunct.
-  @Element
-  private double DIASTIC_POWER;
+  // (double) only appropriate for grain or adjunct.
+  @Element(required=false)
+  private String DIASTIC_POWER;
 
-  // percent.  only appropriate for grain or adjunct.
-  @Element
-  private double PROTEIN;
+  // (double) percent.  only appropriate for grain or adjunct.
+  @Element(required=false)
+  private String PROTEIN;
 
   // percent.
-  @Element
+  @Element(required=false)
   private double MAX_IN_BATCH;
 
   // really a bool.
   // list values: TRUE, FALSE
-  @Element
+  @Element(required=false)
   private String RECOMMENDED_MASH;
 
   // useful for calculating IBU
-  @Element
+  @Element(required=false)
   private double IBU_GAL_PER_LB;
 
   public FERMENTABLE() {
@@ -81,7 +83,7 @@ public class FERMENTABLE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
@@ -140,30 +142,30 @@ public class FERMENTABLE {
   }
 
   /**
-   * percent.  only really makes sense for grain or adjunct type.
+   * (double) percent.  only really makes sense for grain or adjunct type.
    */
-  public double getCOARSE_FINE_DIFF() {
+  public String getCOARSE_FINE_DIFF() {
     return COARSE_FINE_DIFF;
   }
 
   /**
-   * percent.  only appropriate for grain or adjunct
+   * (double) percent.  only appropriate for grain or adjunct
    */
-  public double getMOISTURE() {
+  public String getMOISTURE() {
     return MOISTURE;
   }
 
   /**
-   * only appropriate for grain or adjunct.
+   * (double) only appropriate for grain or adjunct.
    */
-  public double getDIASTIC_POWER() {
+  public String getDIASTIC_POWER() {
     return DIASTIC_POWER;
   }
 
   /**
-   * percent.  only appropriate for grain or adjunct.
+   * (double) percent.  only appropriate for grain or adjunct.
    */
-  public double getPROTEIN() {
+  public String getPROTEIN() {
     return PROTEIN;
   }
 
