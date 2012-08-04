@@ -140,7 +140,7 @@ classes = {
                      {name: 'CARBONATION', required: false, type: 'double'},
                      {name: 'FORCED_CARBONATION', required: false, type: 'String', list:['TRUE', 'FALSE'], comment:'really a bool.  default false.'},
                      {name: 'PRIMING_SUGAR_NAME', required: false, type: 'String', comment: 'should really be required'},
-                     {name: 'CARBONATION_TEMP', required: true, type: 'double', comment:'C'},
+                     {name: 'CARBONATION_TEMP', required: false, type: 'double', comment:'C.  should really be required'},
                      {name: 'PRIMING_SUGAR_EQUIV', required: true, type: 'double', comment: 'used for math, if you arent using corn sugar'},
                      {name: 'KEG_PRIMING_FACTOR', required: true, type: 'double', comment: 'used for math when kegging.'}
   ]
