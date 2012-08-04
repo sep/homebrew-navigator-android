@@ -123,8 +123,8 @@ public class RECIPE {
   @Element(required=false)
   private double CARBONATION_TEMP;
 
-  // used for math, if you arent using corn sugar
-  @Element(required=true)
+  // used for math, if you arent using corn sugar.  should really be required.
+  @Element(required=false)
   private double PRIMING_SUGAR_EQUIV;
 
   // used for math when kegging.
@@ -352,7 +352,7 @@ public class RECIPE {
   }
 
   /**
-   * used for math, if you arent using corn sugar
+   * used for math, if you arent using corn sugar.  should really be required.
    */
   public double getPRIMING_SUGAR_EQUIV() {
     return PRIMING_SUGAR_EQUIV;
