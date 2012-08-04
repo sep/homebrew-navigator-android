@@ -42,21 +42,21 @@ public class FERMENTABLE {
   @Element(required=false)
   private String NOTES;
 
-  // percent.  only really makes sense for grain or adjunct type.
+  // (double) percent.  only really makes sense for grain or adjunct type.
   @Element(required=false)
-  private double COARSE_FINE_DIFF;
+  private string COARSE_FINE_DIFF;
 
-  // percent.  only appropriate for grain or adjunct
+  // (double) percent.  only appropriate for grain or adjunct
   @Element(required=false)
-  private double MOISTURE;
+  private string MOISTURE;
 
-  // only appropriate for grain or adjunct.
+  // (double) only appropriate for grain or adjunct.
   @Element(required=false)
-  private double DIASTIC_POWER;
+  private string DIASTIC_POWER;
 
-  // percent.  only appropriate for grain or adjunct.
+  // (double) percent.  only appropriate for grain or adjunct.
   @Element(required=false)
-  private double PROTEIN;
+  private string PROTEIN;
 
   // percent.
   @Element(required=false)
@@ -142,30 +142,30 @@ public class FERMENTABLE {
   }
 
   /**
-   * percent.  only really makes sense for grain or adjunct type.
+   * (double) percent.  only really makes sense for grain or adjunct type.
    */
-  public double getCOARSE_FINE_DIFF() {
+  public string getCOARSE_FINE_DIFF() {
     return COARSE_FINE_DIFF;
   }
 
   /**
-   * percent.  only appropriate for grain or adjunct
+   * (double) percent.  only appropriate for grain or adjunct
    */
-  public double getMOISTURE() {
+  public string getMOISTURE() {
     return MOISTURE;
   }
 
   /**
-   * only appropriate for grain or adjunct.
+   * (double) only appropriate for grain or adjunct.
    */
-  public double getDIASTIC_POWER() {
+  public string getDIASTIC_POWER() {
     return DIASTIC_POWER;
   }
 
   /**
-   * percent.  only appropriate for grain or adjunct.
+   * (double) percent.  only appropriate for grain or adjunct.
    */
-  public double getPROTEIN() {
+  public string getPROTEIN() {
     return PROTEIN;
   }
 
