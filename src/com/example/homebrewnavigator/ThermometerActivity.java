@@ -51,7 +51,7 @@ public class ThermometerActivity extends Activity {
 	/** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection connection = new ServiceConnection() {
 
-        @Override
+    	@Override
         public void onServiceConnected(ComponentName className,
                 IBinder serviceBinder) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
@@ -60,7 +60,7 @@ public class ThermometerActivity extends Activity {
             bound = true;
         }
 
-        @Override
+    	@Override
         public void onServiceDisconnected(ComponentName arg0) {
             bound = false;
         }

@@ -56,7 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Next Step" />
+                android:text="Next Step"
+                android:onClick="nextHandler" />
 
         </LinearLayout>
 
@@ -150,7 +151,7 @@
 
                 <TextView
                     android:id="@+id/tvExpectedEndTime"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dip"
                     android:textColor="@android:color/white" />
@@ -164,7 +165,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Pause / Start" />
+                android:text="Pause"
+                android:onClick="pauseHandler" />
 
             <Button
                 android:id="@+id/bDone"
@@ -173,7 +175,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Done" />
+                android:text="Done"
+                android:onClick="doneHandler" />
 
         </LinearLayout>
 
