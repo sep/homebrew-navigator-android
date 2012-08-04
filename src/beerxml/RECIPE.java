@@ -31,6 +31,10 @@ public class RECIPE {
   @Element(required=true)
   private double BOIL_SIZE;
 
+  // minutes
+  @Element(required=true)
+  private double BOIL_TIME;
+
   // percent
   @Element(required=false)
   private double EFFICIENCY;
@@ -177,6 +181,13 @@ public class RECIPE {
    */
   public double getBOIL_SIZE() {
     return BOIL_SIZE;
+  }
+
+  /**
+   * minutes
+   */
+  public double getBOIL_TIME() {
+    return BOIL_TIME;
   }
 
   /**

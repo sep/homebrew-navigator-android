@@ -3,10 +3,11 @@ package beerxml;
 import java.util.List;
 import org.simpleframework.xml.ElementList;
 
+@Root
 public class RECIPES {
 
-  @ElementList(required=true)
-  private List<Recipe> theRecipes;
+  @ElementList(required=true, inline=true)
+  private List<RECIPE> theRecipes;
 
   public RECIPES() {
     super();
@@ -14,7 +15,7 @@ public class RECIPES {
 
   /**
    */
-  public List<Recipe> gettheRecipes() {
+  public List<RECIPE> gettheRecipes() {
     return theRecipes;
   }
 }
