@@ -1,10 +1,12 @@
 package com.example.homebrewnavigator;
 
+import java.util.List;
+
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +33,10 @@ public class BrewDayActivity extends Activity {
 		
 		mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
 		
+		updateFields();
+	}
+	
+	protected void updateFields() {
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		String currentUnits = currentStep.getUnits();
 		
@@ -57,17 +63,32 @@ public class BrewDayActivity extends Activity {
 		TextView tvExpectedEndTime = (TextView)mActivityBrewDay.findViewById(R.id.tvExpectedEndTime);
 		//tvExpectedEndTime.setText("Done @ 2:00 PM");
 		
-		UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
+		List<RecipeStep> nextSteps = mRecipe.getNextSteps();
+	    ListView lvUpcomingSteps = (ListView)mActivityBrewDay.findViewById(R.id.lvUpcomingSteps);
+
+//	    if( nextSteps != null && nextSteps.size() > 0 )
+//		{
+		    UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
 		
-		ListView lvUpcomingSteps = (ListView)mActivityBrewDay.findViewById(R.id.lvUpcomingSteps);
-		lvUpcomingSteps.setAdapter(laUpcomingSteps);
+		    lvUpcomingSteps.setAdapter(laUpcomingSteps);
+//		}
+//		else
+		if( nextSteps == null || nextSteps.size() == 0 )
+		{
+	    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
+	    	next.setEnabled(false);
+			lvUpcomingSteps.setVisibility(0);
+		}
+
 	}
 	
     public void nextHandler(View v) {
     	RecipeStep currentStep = mRecipe.getCurrentStep();
-    	mRecipe.getCurrentStep().setIsCompleted();
+    	if( currentStep != null ){
+        	mRecipe.getCurrentStep().setIsCompleted();    		
+    	}
     	
-    	// TODO: add logic to refresh view
+		updateFields();
     }
     
     public void pauseHandler(View v) {
