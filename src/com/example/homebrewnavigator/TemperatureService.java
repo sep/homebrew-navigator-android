@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,6 +16,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 //Define an IntentService that lives (effectively) forever
@@ -28,6 +30,8 @@ public class TemperatureService extends NonStopIntentService {
 	private BluetoothDevice[] bluetooth_devices = null;
 	private OutputStream out = null;
 	private InputStream in = null;
+	
+	private boolean notificationFired = false;
 	
 	private boolean keep_running = false;
 	
@@ -66,7 +70,6 @@ public class TemperatureService extends NonStopIntentService {
 		int icon = R.drawable.tempnot;
 		String text = temp;
 		long when = System.currentTimeMillis();
-		Notification notification = new Notification( icon, text, when );
 		
 		Context context = getApplicationContext();
 		String contentTitle = "Temperature notification";
@@ -74,9 +77,34 @@ public class TemperatureService extends NonStopIntentService {
 		Intent notificationIntent = new Intent(this, TemperatureService.class);
 		int flag = Notification.FLAG_ONGOING_EVENT;
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, flag);
+
 		
-		notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		notiManager.notify(TEMP_NOTIF_ID, notification);
+		
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+		{
+			Notification noti = new Notification(icon, temp, when);
+			noti.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
+			notiManager.notify(TEMP_NOTIF_ID, noti);
+		}
+		else
+		{
+			fireNotiApi11(context, contentTitle, contentText, icon);
+		}
+		
+		
+	}
+	
+	@TargetApi(11)
+	private void fireNotiApi11(Context context, String title, String text, int icon)
+	{
+		Notification.Builder builder = new Notification.Builder(context)
+        .setContentTitle(title)
+        .setContentText(text)
+        .setSmallIcon(icon);
+		
+		Notification noti = builder.getNotification();
+		
+		notiManager.notify(TEMP_NOTIF_ID, noti);
 	}
 	
 	public void startBluetoothService()
