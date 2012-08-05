@@ -6,12 +6,9 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -33,11 +30,7 @@ public class TemperatureService extends NonStopIntentService {
 	
 	private float temperature = 0;
 	private boolean connected = false;
-	
-	private NotificationManager  notiManager;
-	
-	private static final int TEMP_NOTIF_ID = 1;
-	
+		
 	private IBinder temperatureBinder = new TemperatureBinder();
 
 	public class TemperatureBinder extends Binder {
@@ -50,7 +43,6 @@ public class TemperatureService extends NonStopIntentService {
 	
 	public TemperatureService() {
 		super("TemperatureService");
-		// TODO Auto-generated constructor stub
   	
 	}
 	
@@ -62,29 +54,10 @@ public class TemperatureService extends NonStopIntentService {
 		thread.start();
 	}
 	
-	private void fireNotification(String temp)
-	{
-		int icon = R.drawable.tempnot;
-		Context context = getApplicationContext();
-		String contentTitle = "Temperature notification";
-		String contentText = "Your current temperature is " + temp;
-		Notification.Builder builder = new Notification.Builder(context)
-        .setContentTitle(contentTitle)
-        .setContentText(contentText)
-        .setSmallIcon(icon);
-		
-		Notification noti = builder.getNotification();
-		
-		notiManager.notify(TEMP_NOTIF_ID, noti);
-	}
-	
 	public void startBluetoothService()
 	{
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        
-        String ns = Context.NOTIFICATION_SERVICE;
-        notiManager = (NotificationManager) getSystemService(ns);
-        
+                
         //We should never actually use the below value
         String[] devices_strings = { "No Adapter Found" };
         
@@ -113,7 +86,7 @@ public class TemperatureService extends NonStopIntentService {
             {
             	
             	device = adapter.getRemoteDevice(bluetooth_devices[0].getAddress());
-            	//Connect to SPP service - build-in method is apparently broken.  this reflection is a workaround.
+            	//Connect to SPP service - built-in method is apparently broken.  this reflection is a workaround.
             	Method m;
             	m = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
             	socket = (BluetoothSocket)m.invoke(device, Integer.valueOf(1)); 
@@ -148,7 +121,6 @@ public class TemperatureService extends NonStopIntentService {
             }
         }
         
-        fireNotification("0.00");
 	}
 	
 	@Override
@@ -229,7 +201,6 @@ public class TemperatureService extends NonStopIntentService {
 		        	{
 		        		temperature = Float.parseFloat(temp);
 		        		connected = true;
-		        		fireNotification(temp);
 		        	}
 		        	catch(Exception e)
 		        	{
