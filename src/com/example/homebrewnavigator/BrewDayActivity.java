@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.homebrewnavigator.bll.Batch;
+import com.example.homebrewnavigator.bll.BatchRepository;
 import com.example.homebrewnavigator.bll.FakeRecipeRepository;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
@@ -117,10 +119,7 @@ public class BrewDayActivity extends Activity {
 		}
 		
 		  String ns = Context.NOTIFICATION_SERVICE;
-	        notiManager = (NotificationManager) getSystemService(ns);
-	        
-	        
-	       
+	        notiManager = (NotificationManager) getSystemService(ns);	        	      	    
 	}
 	
 	private void HandleTempUpdate(float temp) {
@@ -356,7 +355,7 @@ public class BrewDayActivity extends Activity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Are you sure?")
 					.setPositiveButton("Yes", dialogClickListener)
-					.setNegativeButton("No", dialogClickListener).show();
+					.setNegativeButton("No", dialogClickListener).show();				
 		} else {
 			leaveBrewActivity();
 		}
@@ -365,6 +364,9 @@ public class BrewDayActivity extends Activity {
 	private void leaveBrewActivity() {
 		if( !isBrewing() ){
 			finish();
+			BatchRepository batchRepo = new BatchRepository();
+			GregorianCalendar gc = new GregorianCalendar();
+			batchRepo.SaveBatch(new Batch(mRecipe.getName() + gc.getTimeInMillis(), mRecipe.getName()));
 		}
 		else{
 		 	stopBrewing();

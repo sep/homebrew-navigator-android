@@ -7,9 +7,8 @@ public class RecipeBook {
 	public RecipeBook(IRecipeRepository recipeRepo){
 		_recipeRepo = recipeRepo;
 	}
+	
 	public Recipe GetRecipe(String daName) {
 		return _recipeRepo.GetRecipeByName(daName);
 	}
-		
-
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ActionBar;
+import com.example.homebrewnavigator.bll.Batch;
+import com.example.homebrewnavigator.bll.BatchRepository;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,9 +49,12 @@ public class JournalActivity extends Activity {
 		super.onResume();
 		List<String> batches = new ArrayList<String>();
 		
-		batches.add("Kolsch");
-		batches.add("Trippel");
-		batches.add("Cream Ale");
+		BatchRepository batchRepo = new BatchRepository();
+		ArrayList<Batch> batcheList = batchRepo.GetAll();
+		
+		for(Batch b : batcheList){
+			batches.add(b.getName());
+		}
 		
 		JournalListAdapter journalList = new JournalListAdapter(getApplicationContext(), batches);
 		mJournalListView.setAdapter(journalList);
