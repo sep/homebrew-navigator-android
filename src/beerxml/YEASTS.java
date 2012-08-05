@@ -1,11 +1,14 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class YEASTS {
 
-  @ElementArray
-	private YEAST[] theYeasts;
+  @ElementList(required=true, inline=true)
+  private List<YEAST> theYeasts;
 
   public YEASTS() {
     super();
@@ -13,7 +16,7 @@ public class YEASTS {
 
   /**
    */
-  public YEAST[] gettheYeasts() {
+  public List<YEAST> gettheYeasts() {
     return theYeasts;
   }
 }

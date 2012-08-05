@@ -1,77 +1,79 @@
 package beerxml;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class STYLE {
 
-  @Element
+  @Element(required=true)
   private String NAME;
 
-  @Element
-  private int VERSION;
+  @Element(required=true)
+  private double VERSION;
 
-  @Element
+  @Element(required=true)
   private String CATEGORY;
 
-  @Element
+  @Element(required=true)
   private String CATEGORY_NUMBER;
 
-  @Element
+  @Element(required=true)
   private String STYLE_LETTER;
 
-  @Element
+  @Element(required=true)
   private String STYLE_GUIDE;
 
   // list values: Lager, Ale, Mead, Wheat, Mixed, Cider
-  @Element
+  @Element(required=true)
   private String TYPE;
 
-  @Element
+  @Element(required=true)
   private double OG_MIN;
 
-  @Element
+  @Element(required=true)
   private double OG_MAX;
 
-  @Element
+  @Element(required=true)
   private double FG_MIN;
 
-  @Element
+  @Element(required=true)
   private double FG_MAX;
 
-  @Element
-  private int IBU_MIN;
+  @Element(required=true)
+  private double IBU_MIN;
 
-  @Element
-  private int IBU_MAX;
+  @Element(required=true)
+  private double IBU_MAX;
 
-  @Element
-  private int COLOR_MIN;
+  @Element(required=true)
+  private double COLOR_MIN;
 
-  @Element
-  private int COLOR_MAX;
+  @Element(required=true)
+  private double COLOR_MAX;
 
-  @Element
+  @Element(required=false)
   private double CARB_MIN;
 
-  @Element
+  @Element(required=false)
   private double CARB_MAX;
 
-  @Element
+  @Element(required=false)
   private double ABV_MIN;
 
-  @Element
+  @Element(required=false)
   private double ABV_MAX;
 
-  @Element
+  @Element(required=false)
   private String NOTES;
 
-  @Element
+  @Element(required=false)
   private String PROFILE;
 
-  @Element
+  @Element(required=false)
   private String INGREDIENTS;
 
-  @Element
+  @Element(required=false)
   private String EXAMPLES;
 
   public STYLE() {
@@ -86,7 +88,7 @@ public class STYLE {
 
   /**
    */
-  public int getVERSION() {
+  public double getVERSION() {
     return VERSION;
   }
 
@@ -147,25 +149,25 @@ public class STYLE {
 
   /**
    */
-  public int getIBU_MIN() {
+  public double getIBU_MIN() {
     return IBU_MIN;
   }
 
   /**
    */
-  public int getIBU_MAX() {
+  public double getIBU_MAX() {
     return IBU_MAX;
   }
 
   /**
    */
-  public int getCOLOR_MIN() {
+  public double getCOLOR_MIN() {
     return COLOR_MIN;
   }
 
   /**
    */
-  public int getCOLOR_MAX() {
+  public double getCOLOR_MAX() {
     return COLOR_MAX;
   }
 

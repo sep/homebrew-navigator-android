@@ -1,11 +1,14 @@
 package beerxml;
 
-import org.simpleframework.xml.ElementArray;
+import java.util.List;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
+@Root(strict=false)
 public class RECIPES {
 
-  @ElementArray
-  private RECIPE[] theRecipes;
+  @ElementList(required=true, inline=true)
+  private List<RECIPE> theRecipes;
 
   public RECIPES() {
     super();
@@ -13,7 +16,7 @@ public class RECIPES {
 
   /**
    */
-  public RECIPE[] gettheRecipes() {
+  public List<RECIPE> gettheRecipes() {
     return theRecipes;
   }
 }
