@@ -6,9 +6,11 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
 
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -35,7 +37,7 @@ public class TemperatureService extends NonStopIntentService {
 
 	public class TemperatureBinder extends Binder {
 		
-		TemperatureService getService()
+		public TemperatureService getService()
 		{
 			return TemperatureService.this;
 		}
@@ -201,6 +203,10 @@ public class TemperatureService extends NonStopIntentService {
 		        	{
 		        		temperature = Float.parseFloat(temp);
 		        		connected = true;
+		        		
+		        		Intent i = new Intent("updatedTemperature");
+		        		i.putExtra("temp", temperature);
+		        		MyContext.getContext().sendBroadcast(i);
 		        	}
 		        	catch(Exception e)
 		        	{

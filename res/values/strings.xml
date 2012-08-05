@@ -4,5 +4,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Homebrew Navigator</string>
+    <string name="prefs_name">HomebrewNavigator</string>
+    <string name="brewing_pref">brewingActive</string>
+    
+    <string name="recipe_button"><b>Recipe Management</b> \n <i>Click here to view and manage your recipes. </i></string>
+    <string name="journal_button"><b>Journal Entries</b> \n <i>Click here to view previous batches and notes. </i></string>
 
 </resources>

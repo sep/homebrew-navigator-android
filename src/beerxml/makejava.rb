@@ -1,6 +1,6 @@
 classes = {
   "RECIPES" => [{name: "theRecipes", required: true, type: 'List<RECIPE>', elementtag: "@ElementList"}],
-  "MISCS" => [{name: "theMiscs", required: true, type: 'List<MISC>', elementtag: "@ElementList"}],
+  "MISCS" => [{name: "theMiscs", required: false, type: 'List<MISC>', elementtag: "@ElementList"}],
   "STYLES" => [{name: "theStyles", required: true, type: 'List<STYLE>', elementtag: "@ElementList"}],
   "YEASTS" => [{name: "theYeasts", required: true, type: 'List<YEAST>', elementtag: "@ElementList"}],
   "HOPS" => [{name: "theHops", required: true, type: 'List<HOP>', elementtag: "@ElementList"}],
@@ -120,7 +120,7 @@ classes = {
                      {name: 'EFFICIENCY', required: false, type: 'double', comment:'percent'},
                      {name: 'HOPS', required: true, type: 'HOPS'},
                      {name: 'FERMENTABLES', required: true, type: 'FERMENTABLES'},
-                     {name: 'MISCS', required: true, type: 'MISCS'},
+                     {name: 'MISCS', required: false, type: 'MISCS'},
                      {name: 'YEASTS', required: true, type: 'YEASTS'},
                      {name: 'NOTES', required: false, type: 'String'},
                      {name: 'TASTE_NOTES', required: false, type: 'String'},

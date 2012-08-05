@@ -2,16 +2,20 @@ package com.example.homebrewnavigator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends Activity {
-
+    public Boolean mBrewing = false;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getActionBar().setTitle("HomeBrew Navigator");
     }
 
     @Override
@@ -20,6 +24,30 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Commenting out this code because it is causing issues.
+		//If we want this behavior, there is a better way to do it.
+		//We should simply clearTop and startActivity...but this can ultimately
+		//result in keeping you stuck on the brew-day page.
+//		if( isBrewing() ){
+//        	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
+//        }
+	}
+
+	public Boolean isBrewing(){
+        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs_name), 0);
+        Boolean brewing = settings.getBoolean(getString(R.string.brewing_pref), false);
+        return brewing;
+    }
+
     public void recipeHandler(View v) {
     	startActivity(new Intent().setClassName(getApplicationContext(), RecipeManagerActivity.class.getName()));
     }

@@ -3,42 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
-
     <Button
         android:id="@+id/recipeManagement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView1"
-        android:layout_marginBottom="80dp"
-        android:layout_toLeftOf="@+id/textView1"
-        android:text="Recipe Management"
-        android:onClick="recipeHandler" />
-
-    <Button
-        android:id="@+id/brewDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/button1"
-        android:layout_below="@+id/textView1"
-        android:text="Brew Day"
-        android:onClick="brewHandler" />
+        android:layout_width="match_parent"
+        android:layout_height="150dip"
+        android:onClick="recipeHandler"
+        android:text="@string/recipe_button"
+        android:drawableLeft="@drawable/glyphicons_319_sort" />
 
     <Button
         android:id="@+id/thermometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/button2"
-        android:layout_marginBottom="58dp"
-        android:text="Thermometer"
-        android:onClick="thermoHandler" />
+        android:layout_width="match_parent"
+        android:layout_height="150dip"
+        android:layout_below="@+id/recipeManagement"
+        android:onClick="thermoHandler"
+        android:text="@string/journal_button"
+        android:drawableLeft="@drawable/glyphicons_039_notes" />
 
 </RelativeLayout>
