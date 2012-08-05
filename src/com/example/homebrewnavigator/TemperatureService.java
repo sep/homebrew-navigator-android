@@ -8,6 +8,7 @@ import java.util.Set;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -42,7 +43,7 @@ public class TemperatureService extends NonStopIntentService {
 
 	public class TemperatureBinder extends Binder {
 		
-		TemperatureService getService()
+		public TemperatureService getService()
 		{
 			return TemperatureService.this;
 		}
@@ -68,10 +69,15 @@ public class TemperatureService extends NonStopIntentService {
 		Context context = getApplicationContext();
 		String contentTitle = "Temperature notification";
 		String contentText = "Your current temperature is " + temp;
+		
+		Intent notificationIntent = new Intent().setClassName(context, BrewDayActivity.class.getName());
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
 		Notification.Builder builder = new Notification.Builder(context)
         .setContentTitle(contentTitle)
         .setContentText(contentText)
-        .setSmallIcon(icon);
+        .setSmallIcon(icon)
+        .setContentIntent(pendingIntent);
 		
 		Notification noti = builder.getNotification();
 		
@@ -230,6 +236,9 @@ public class TemperatureService extends NonStopIntentService {
 		        		temperature = Float.parseFloat(temp);
 		        		connected = true;
 		        		fireNotification(temp);
+		        		Intent i = new Intent("updatedTemperature");
+		        		i.putExtra("temp", temperature);
+		        		MyContext.getContext().sendBroadcast(i);
 		        	}
 		        	catch(Exception e)
 		        	{

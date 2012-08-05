@@ -7,6 +7,7 @@ public class MyContext extends Application {
 
 	private static MyContext instance;
 
+
 	public MyContext() {
 		instance = this;
 	}

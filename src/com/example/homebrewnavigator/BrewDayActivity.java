@@ -1,13 +1,24 @@
 package com.example.homebrewnavigator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,75 +30,160 @@ import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
 
 public class BrewDayActivity extends Activity {
-    private RelativeLayout mActivityBrewDay = null;
+    private static final String TIME_UNITS = "minutes";
+	private static final String TEMPERATURE_UNITS = "\u00B0F";
+	private static final int TEMP_NOTIF_ID = 1;
+	
+	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
 	private Boolean mPaused = true;
+	private NotificationManager  notiManager;
+	private BroadcastReceiver updatedTemperatureReceiver;
+	private BroadcastReceiver timedStepCompleteReceiver;
+	private TextView tvCurrentValue;
+	private CountDownTimer mCountDownTimer;
+	private CountDownTimer mOverallTimer;
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Resources res = getResources();
-        mActivityBrewDay = (RelativeLayout)getLayoutInflater().inflate(R.layout.activity_brew_day,null);
-        setContentView(mActivityBrewDay);
-    }
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Resources res = getResources();
+		mActivityBrewDay = (RelativeLayout) getLayoutInflater().inflate(
+				R.layout.activity_brew_day, null);
+		setContentView(mActivityBrewDay);
+		timedStepCompleteReceiver = new BroadcastReceiver() {
 
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if (intent.getAction() == "timedStepComplete") {
+					
+				}				
+			}
+		};
+		if (timedStepCompleteReceiver!=null) {
+			registerReceiver(timedStepCompleteReceiver, new IntentFilter("timedStepComplete"));
+		}
+		
+		updatedTemperatureReceiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if (intent.getAction() == "updatedTemperature") {
+					float temp = intent.getExtras().getFloat("temp");
+					HandleTempUpdate(temp);
+				}				
+			}
+
+		};
+		if (updatedTemperatureReceiver!=null) {
+			registerReceiver(updatedTemperatureReceiver, new IntentFilter("updatedTemperature"));
+		}
+		
+		  String ns = Context.NOTIFICATION_SERVICE;
+	        notiManager = (NotificationManager) getSystemService(ns);
+	}
+	
+	private void HandleTempUpdate(float temp) {
+		RecipeStep rs = mRecipe.getCurrentStep();
+		
+		if (rs.getUnits() == TEMPERATURE_UNITS){
+			rs.setValue((int)temp);
+			if ( Float.parseFloat(rs.getTarget().toString()) <= temp){
+				triggerNotification(temp);				
+			}
+			updateFields();
+		}			
+	}
+	
+	private void triggerNotification(float temp) {		
+			int icon = R.drawable.tempnot;
+			Context context = getApplicationContext();
+			String contentTitle = "Temperature Step notification";
+			String contentText = "Your current temperature is " + temp;
+			
+			Intent notificationIntent = new Intent().setClassName(context, BrewDayActivity.class.getName());
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			
+			Notification.Builder builder = new Notification.Builder(context)
+	        .setContentTitle(contentTitle)
+	        .setContentText(contentText)
+	        .setSmallIcon(icon)
+	        .setContentIntent(pendingIntent);
+			
+			Notification noti = builder.getNotification();
+			
+			notiManager.notify(TEMP_NOTIF_ID+1, noti);				
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
-		
+
 		updateFields();
 	}
-	
+
 	protected void updateFields() {
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		String currentUnits = currentStep.getUnits();
 		Object currentValue = currentStep.getValue();
 		Object targetValue = currentStep.getTarget();
 		
-		TextView tvCurrentValue = (TextView)mActivityBrewDay.findViewById(R.id.tvCurrentValue);
+		tvCurrentValue = (TextView) mActivityBrewDay.findViewById(R.id.tvCurrentValue);
 		
-		if( currentValue != null && currentValue != "" && currentUnits != null && currentUnits != "" ){
-			tvCurrentValue.setText(currentValue + " " + currentUnits);			
+		if (mCountDownTimer != null) {
+			//have to cancel the timer if we get here, otherwise it overwrites the TextView
+			mCountDownTimer.cancel();
 		}
-		else
-		{
+		
+		if (currentUnits != null && currentUnits.equalsIgnoreCase(TIME_UNITS)) {
+			startCountDownTimer(convertMinutesToMillis(targetValue));
+		} else if (currentValue != null && currentValue != "" && currentUnits != null
+				&& currentUnits != "") {
+			tvCurrentValue.setText(currentValue + " " + currentUnits);
+		} else {
 			tvCurrentValue.setText("");
 		}
+		
 
-		TextView tvCurrentInstruction = (TextView)mActivityBrewDay.findViewById(R.id.tvCurrentInstruction);
+		TextView tvCurrentInstruction = (TextView) mActivityBrewDay
+				.findViewById(R.id.tvCurrentInstruction);
 		tvCurrentInstruction.setText(currentStep.getInstruction());
 
-		TextView tvTimeRemainingValue = (TextView)mActivityBrewDay.findViewById(R.id.tvTimeRemainingValue);
-		TextView tvTimeRemainingText = (TextView)mActivityBrewDay.findViewById(R.id.tvTimeRemainingText);
+		TextView tvTimeRemainingValue = (TextView) mActivityBrewDay
+				.findViewById(R.id.tvTimeRemainingValue);
+		TextView tvTimeRemainingText = (TextView) mActivityBrewDay
+				.findViewById(R.id.tvTimeRemainingText);
 
-		if( currentUnits != null && currentUnits != "" && targetValue != null && currentValue != null)
-		{
-		    tvTimeRemainingValue.setText(""+((Integer)targetValue - (Integer)currentValue));
+		if (currentUnits != null && currentUnits != "" && targetValue != null
+				&& currentValue != null) {
+			tvTimeRemainingValue.setText(""
+					+ ((Integer) targetValue - (Integer) currentValue));
 			tvTimeRemainingText.setText(currentUnits + " remaining");
-		}
-		else
-		{
-		    tvTimeRemainingValue.setText("");
+		} else {
+			tvTimeRemainingValue.setText("");
 			tvTimeRemainingText.setText("");
 		}
 
-		TextView tvExpectedEndTime = (TextView)mActivityBrewDay.findViewById(R.id.tvExpectedEndTime);
-		//tvExpectedEndTime.setText("Done @ 2:00 PM");
-		
+		TextView tvExpectedEndTime = (TextView) mActivityBrewDay
+				.findViewById(R.id.tvExpectedEndTime);
+		// tvExpectedEndTime.setText("Done @ 2:00 PM");
+
 		List<RecipeStep> nextSteps = mRecipe.getNextSteps();
-	    ListView lvUpcomingSteps = (ListView)mActivityBrewDay.findViewById(R.id.lvUpcomingSteps);
+		ListView lvUpcomingSteps = (ListView) mActivityBrewDay
+				.findViewById(R.id.lvUpcomingSteps);
 
-        UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
+		UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this,
+				mRecipe.getNextSteps());
+
+		lvUpcomingSteps.setAdapter(laUpcomingSteps);
 		
-	    lvUpcomingSteps.setAdapter(laUpcomingSteps);
-    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
-    	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
+		Button next = (Button) mActivityBrewDay.findViewById(R.id.bNextStep);
 
-		if( nextSteps == null || nextSteps.size() == 0 ){
-	    	next.setEnabled(false);
-	    	pause.setEnabled(false);
+		if (nextSteps == null || nextSteps.size() == 0) {
+			
+			next.setEnabled(false);
 			lvUpcomingSteps.setVisibility(0);
 		}
 		else if( isBrewing() && !mPaused ){
@@ -98,13 +194,47 @@ public class BrewDayActivity extends Activity {
 		}
 
 	}
+
+	private long convertMinutesToMillis(Object targetValue) {
+		//assumes that this Integer is in minutes
+		return ((Integer)targetValue).intValue() * 60 * 1000;
+	}
+
+	private void startCountDownTimer(long timeInMillis) {
+		
+		mCountDownTimer = new CountDownTimer(timeInMillis, 1000) {
+			
+			@Override
+			public void onTick(long millisUntilFinished) {
+				//MM:SS
+				String formattedTime = formatMillisToMinutesAndSeconds(millisUntilFinished);
+				tvCurrentValue.setText(formattedTime);
+			}
+			
+			@Override
+			public void onFinish() {
+				tvCurrentValue.setText("--:--");
+			}
+		};
+		
+		mCountDownTimer.start();
+	}
 	
-    public void nextHandler(View v) {
-    	RecipeStep currentStep = mRecipe.getCurrentStep();
-    	if( currentStep != null ){
-        	mRecipe.getCurrentStep().setIsCompleted();    		
-    	}
-    	
+	private String formatMillisToMinutesAndSeconds(
+			long millisUntilFinished) {
+		DateFormat timeFormat = new SimpleDateFormat("mm:ss");
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(millisUntilFinished);
+		String formattedTime = timeFormat.format(gc.getTime());
+		return formattedTime;
+	}
+
+	public void nextHandler(View v) {
+		RecipeStep currentStep = mRecipe.getCurrentStep();
+		if (currentStep != null) {
+			mRecipe.getCurrentStep().setIsCompleted();
+		}
+
 		updateFields();
     }
     
@@ -143,24 +273,40 @@ public class BrewDayActivity extends Activity {
             } 
         } 
     }; 
-     
-    public void doneHandler(View v) {
-    	if( mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0 ){
-    	    AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-    	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener) 
-    	        .setNegativeButton("No", dialogClickListener).show(); 
-    	}
-    	else
-    	{
-	        finish();
-    	}
-    }
+ 
+	public void pauseHandler(View v) {
+		Button pause = (Button) mActivityBrewDay.findViewById(R.id.bPause);
+		if (mPaused) {
+			// TODO: handle unpausing
+			pause.setText("Pause");
+		} else {
+			// TODO: handle pausing
+			pause.setText("Play");
+		}
+		mPaused = !mPaused;
+	}
+	
+	
+
+	public void doneHandler(View v) {
+		if (mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure?")
+					.setPositiveButton("Yes", dialogClickListener)
+					.setNegativeButton("No", dialogClickListener).show();
+		} else {
+			finish();
+		}
+	}
 
 	@Override
 	public void finish() {
-    	// TODO: add logic to mark recipe as done
-		stopBrewing();
+		// TODO: add logic to mark recipe as done
+
+	 	unregisterReceiver(updatedTemperatureReceiver);
+	 	unregisterReceiver(timedStepCompleteReceiver);
 		super.finish();
+//	 	unregisterReceiver(temperatureReachedReceiver);		
 	}
 
 	@Override
@@ -193,4 +339,3 @@ public class BrewDayActivity extends Activity {
     }
 
 }
-

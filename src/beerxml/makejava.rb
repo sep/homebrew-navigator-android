@@ -120,7 +120,7 @@ classes = {
                      {name: 'EFFICIENCY', required: false, type: 'double', comment:'percent'},
                      {name: 'HOPS', required: true, type: 'HOPS'},
                      {name: 'FERMENTABLES', required: true, type: 'FERMENTABLES'},
-                     {name: 'MISCS', required: true, type: 'MISCS'},
+                     {name: 'MISCS', required: false, type: 'MISCS'},
                      {name: 'YEASTS', required: true, type: 'YEASTS'},
                      {name: 'NOTES', required: false, type: 'String'},
                      {name: 'TASTE_NOTES', required: false, type: 'String'},
