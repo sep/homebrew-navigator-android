@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -20,6 +21,7 @@ import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -48,9 +50,24 @@ public class BrewDayActivity extends Activity {
 	private CountDownTimer mCountDownTimer;
 	private CountDownTimer mOverallTimer;
 	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		Resources res = getResources();
 		mActivityBrewDay = (RelativeLayout) getLayoutInflater().inflate(
 				R.layout.activity_brew_day, null);
@@ -158,6 +175,9 @@ public class BrewDayActivity extends Activity {
 	}
 
 	protected void updateFields() {
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(!isBrewing());
+		
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		String currentUnits = currentStep.getUnits();
 		Object currentValue = currentStep.getValue();
@@ -321,7 +341,7 @@ public class BrewDayActivity extends Activity {
             switch (which){ 
             case DialogInterface.BUTTON_POSITIVE: 
                 //Yes button clicked 
-            	finish();
+            	leaveBrewActivity();
                 break; 
      
             case DialogInterface.BUTTON_NEGATIVE: 
@@ -338,7 +358,20 @@ public class BrewDayActivity extends Activity {
 					.setPositiveButton("Yes", dialogClickListener)
 					.setNegativeButton("No", dialogClickListener).show();
 		} else {
+			leaveBrewActivity();
+		}
+	}
+
+	private void leaveBrewActivity() {
+		if( !isBrewing() ){
 			finish();
+		}
+		else{
+		 	stopBrewing();
+
+		 	Intent i = new Intent();
+			i.setClassName(this, JournalActivity.class.getName());
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		}
 	}
 

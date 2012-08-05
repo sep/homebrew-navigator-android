@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import beerxml.FERMENTABLE;
@@ -25,10 +26,27 @@ public class RecipeActivity extends Activity {
 		
 	}
 	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		final ActionBar bar = getActionBar();
 
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		String recipeName = getIntent().getExtras().getString("recipeName");
 		RECIPE recipe = mRepository.recipeForName(recipeName);
 

@@ -3,9 +3,6 @@ package com.example.homebrewnavigator;
 import java.util.ArrayList;
 import java.util.List;
 
-import beerxml.RECIPE;
-import beerxml.RecipeRepository;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -20,6 +17,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +26,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import beerxml.RECIPE;
+import beerxml.RecipeRepository;
 
 /**
  * This demonstrates the use of action bar tabs and how they interact with other
@@ -37,10 +37,27 @@ public class RecipeManagerActivity extends Activity {
 
 	private ProgressDialog mProgressDialog;
 
-	@Override
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; go home
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		this.getFragmentManager();
 
 		final ActionBar bar = getActionBar();
@@ -87,7 +104,7 @@ public class RecipeManagerActivity extends Activity {
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog
 				.setMessage("Please wait while we load recipes for your enjoyment.");
-		mProgressDialog.show();
+		//mProgressDialog.show();
 	}
 
 	protected void closeProgressDialog() {
