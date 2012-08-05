@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -37,7 +38,9 @@ public class BrewDayActivity extends Activity {
 	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
 	private Boolean mPaused = true;
+	private Boolean mTimesUp = false;
 	private NotificationManager  notiManager;
+	private RingtoneManager ringToneManager;
 	private BroadcastReceiver updatedTemperatureReceiver;
 	private BroadcastReceiver timedStepCompleteReceiver;
 	private TextView tvCurrentValue;
@@ -55,8 +58,8 @@ public class BrewDayActivity extends Activity {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				if (intent.getAction() == "timedStepComplete") {
-					
+				if (intent.getAction() == "timedStepComplete") {					
+					triggerTendBrewNotification();									
 				}				
 			}
 		};
@@ -81,6 +84,9 @@ public class BrewDayActivity extends Activity {
 		
 		  String ns = Context.NOTIFICATION_SERVICE;
 	        notiManager = (NotificationManager) getSystemService(ns);
+	        
+	        
+	       
 	}
 	
 	private void HandleTempUpdate(float temp) {
@@ -89,30 +95,32 @@ public class BrewDayActivity extends Activity {
 		if (rs.getUnits() == TEMPERATURE_UNITS){
 			rs.setValue((int)temp);
 			if ( Float.parseFloat(rs.getTarget().toString()) <= temp){
-				triggerNotification(temp);				
+				triggerTendBrewNotification();				
 			}
 			updateFields();
 		}			
 	}
 	
-	private void triggerNotification(float temp) {		
+	private void triggerTendBrewNotification() {
+		if (isBrewing()){
 			int icon = R.drawable.tempnot;
 			Context context = getApplicationContext();
-			String contentTitle = "Temperature Step notification";
-			String contentText = "Your current temperature is " + temp;
+			String contentTitle = "Step Complete Notification";	
 			
 			Intent notificationIntent = new Intent().setClassName(context, BrewDayActivity.class.getName());
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
 			Notification.Builder builder = new Notification.Builder(context)
 	        .setContentTitle(contentTitle)
-	        .setContentText(contentText)
+	        .setContentText("Please tend to your brew!")
 	        .setSmallIcon(icon)
+	        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
 	        .setContentIntent(pendingIntent);
 			
 			Notification noti = builder.getNotification();
 			
-			notiManager.notify(TEMP_NOTIF_ID+1, noti);				
+			notiManager.notify(TEMP_NOTIF_ID+1, noti);	
+		}			
 	}
 	
 	@Override
@@ -233,12 +241,18 @@ public class BrewDayActivity extends Activity {
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		if (currentStep != null) {
 			mRecipe.getCurrentStep().setIsCompleted();
+			ClearStepNotifications();	
+			mTimesUp = false;
 		}
 
 		updateFields();
     }
     
-    public void playPauseHandler(View v) {
+    private void ClearStepNotifications() {
+    	notiManager.cancel(TEMP_NOTIF_ID+1);
+	}
+
+	public void playPauseHandler(View v) {
     	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
     	if( mPaused || !isBrewing() ){
     		if( !isBrewing() ){
@@ -302,9 +316,9 @@ public class BrewDayActivity extends Activity {
 	@Override
 	public void finish() {
 		// TODO: add logic to mark recipe as done
-
 	 	unregisterReceiver(updatedTemperatureReceiver);
 	 	unregisterReceiver(timedStepCompleteReceiver);
+	 	stopBrewing();
 		super.finish();
 //	 	unregisterReceiver(temperatureReachedReceiver);		
 	}

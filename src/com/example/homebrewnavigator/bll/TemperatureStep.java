@@ -46,11 +46,7 @@ public class TemperatureStep extends RecipeStep<Integer> {
 	@Override
 	public void execute() {		
 
-		  if (bound && service.isConnected()){
-			  float t =  service.GetLastTemperature();
-			  if (t >= this.target)			  
-				  dispatcher.fireStepCompleteIntent();
-		  }		  
+		 
 	}
 		
 	/** Defines callbacks for service binding, passed to bindService() */
