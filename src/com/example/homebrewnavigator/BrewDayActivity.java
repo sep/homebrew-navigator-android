@@ -359,6 +359,11 @@ public class BrewDayActivity extends Activity {
     }; 
  
 	public void doneHandler(View v) {
+		BatchRepository batchRepo = new BatchRepository();
+		DateFormat unified24HourFormat = new SimpleDateFormat("yyyy MMMM dd HH:mm");
+		String dateStamp = unified24HourFormat.format(GregorianCalendar.getInstance().getTime());
+		batchRepo.SaveBatch(new Batch(mRecipe.getName() + " " + dateStamp, mRecipe.getName()));
+		
 		if (isBrewing() && mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Are you sure?")
@@ -372,10 +377,6 @@ public class BrewDayActivity extends Activity {
 	private void leaveBrewActivity() {
 		if( !isBrewing() ){
 			finish();
-			BatchRepository batchRepo = new BatchRepository();
-			DateFormat unified24HourFormat = new SimpleDateFormat("yyyy MMMM dd HH:mm");
-			String dateStamp = unified24HourFormat.format(GregorianCalendar.getInstance().getTime());
-			batchRepo.SaveBatch(new Batch(mRecipe.getName() + " " + dateStamp, mRecipe.getName()));
 		}
 		else{
 		 	stopBrewing();
@@ -383,6 +384,7 @@ public class BrewDayActivity extends Activity {
 		 	Intent i = new Intent();
 			i.setClassName(this, JournalActivity.class.getName());
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
 		}
 	}
 
