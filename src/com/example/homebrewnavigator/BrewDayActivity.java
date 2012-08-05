@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import beerxml.RecipeRepository;
 
 import com.example.homebrewnavigator.bll.Batch;
 import com.example.homebrewnavigator.bll.BatchRepository;
@@ -52,6 +53,7 @@ public class BrewDayActivity extends Activity {
 	private TextView tvTimeRemainingValue;
 	private CountDownTimer mCountDownTimer;
 	private CountDownTimer mOverallTimer;
+	private RecipeRepository mRepository;
 	
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -71,6 +73,8 @@ public class BrewDayActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		mRepository = new RecipeRepository();
+		
 		Resources res = getResources();
 		mActivityBrewDay = (RelativeLayout) getLayoutInflater().inflate(
 				R.layout.activity_brew_day, null);
@@ -82,13 +86,16 @@ public class BrewDayActivity extends Activity {
 			//reset the timers???
 //			mRecipe = (Recipe) savedInstanceState.getSerializable(CURRENT_RECIPE);
 			
-			mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
+			String recipeName = getIntent().hasExtra("recipeName") ? getIntent().getExtras().getString("recipeName") : "fake";
+			
+			mRecipe = mRepository.getDeepRecipe(recipeName);
 
 		}
 		else
 		{
-			//get the recipe that we were told to get
-			mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
+			String recipeName = getIntent().hasExtra("recipeName") ? getIntent().getExtras().getString("recipeName") : "fake";
+
+			mRecipe = mRepository.getDeepRecipe(recipeName);
 		}
 		
 		timedStepCompleteReceiver = new BroadcastReceiver() {

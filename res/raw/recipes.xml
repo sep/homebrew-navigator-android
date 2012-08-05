@@ -427,25 +427,6 @@ Substitites: N/A</NOTES>
  <DISPLAY_TIME>60.0 min</DISPLAY_TIME>
 </HOP>
 <HOP>
- <NAME>Target</NAME>
- <VERSION>1</VERSION>
- <ORIGIN>United Kingdom</ORIGIN>
- <ALPHA>9.0000000</ALPHA>
- <AMOUNT>0.0168499</AMOUNT>
- <USE>Boil</USE>
- <TIME>60.0000000</TIME>
- <NOTES>Use for: English ales and lagers
-Aroma: Robust aroma and flavor
-Substitutes: East Kent Goldings</NOTES>
- <TYPE>Bittering</TYPE>
- <FORM>Pellet</FORM>
- <BETA>5.0000000</BETA>
- <HSI>50.0000000</HSI>
- <DISPLAY_AMOUNT>0.59 oz</DISPLAY_AMOUNT>
- <INVENTORY>0.53 oz</INVENTORY>
- <DISPLAY_TIME>60.0 min</DISPLAY_TIME>
-</HOP>
-<HOP>
  <NAME>Imperial Challenger</NAME>
  <VERSION>1</VERSION>
  <ORIGIN>United Kingdom</ORIGIN>
