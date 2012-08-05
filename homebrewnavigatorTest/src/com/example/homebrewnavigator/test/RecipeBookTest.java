@@ -50,11 +50,11 @@ public class RecipeBookTest extends TestCase {
 	
 	public void testGetCurrentStepReturnCorrectStep(){
 		Recipe r = new Recipe();
-		ManualRecipeStep step1 = new ManualRecipeStep();
+		ManualRecipeStep step1 = new ManualRecipeStep("Blah");
 		step1.setIsCompleted();
-		ManualRecipeStep step2 = new ManualRecipeStep();
-		ManualRecipeStep step3 = new ManualRecipeStep();	
-		ManualRecipeStep step4 = new ManualRecipeStep();
+		ManualRecipeStep step2 = new ManualRecipeStep("Blah");
+		ManualRecipeStep step3 = new ManualRecipeStep("Blah");	
+		ManualRecipeStep step4 = new ManualRecipeStep("Blah");
 		
 		r.addStep(step1);
 		r.addStep(step2);

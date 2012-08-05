@@ -16,7 +16,18 @@ public class TemperatureStep extends RecipeStep<Integer> {
 	private IIntentDispatcher dispatcher; 
 	private boolean bound;
 	private TemperatureService service;
+
+	public TemperatureStep(Integer target, String units, Integer actualValue,
+			String instruction) {
+		super(target, units, actualValue, instruction);
+	}
+
+	public TemperatureStep(Integer target, String instruction) {
+		super(target, "\u00B0F", null, instruction);
+	}
+	
 	public TemperatureStep(int i, IIntentDispatcher d) {
+		super(i, "\u00B0F", null, "wha");
 		dispatcher = d;
 		Intent serviceIntent = new Intent(MyContext.getContext(), TemperatureService.class);	        
 		MyContext.getContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
