@@ -1,6 +1,7 @@
 package com.example.homebrewnavigator;
 
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -28,13 +29,19 @@ import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
 
 public class BrewDayActivity extends Activity {
-    private RelativeLayout mActivityBrewDay = null;
+    private static final String TIME_UNITS = "minutes";
+	private static final String TEMPERATURE_UNITS = "\u00B0F";
+	private static final int TEMP_NOTIF_ID = 1;
+	
+	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
 	private Boolean mPaused = true;
 	private NotificationManager  notiManager;
-	//private BroadcastReceiver temperatureReachedReceiver;
 	private BroadcastReceiver updatedTemperatureReceiver;
 	private BroadcastReceiver timedStepCompleteReceiver;
+	private TextView tvCurrentValue;
+	private CountDownTimer mCountDownTimer;
+	private CountDownTimer mOverallTimer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,19 +62,6 @@ public class BrewDayActivity extends Activity {
 		if (timedStepCompleteReceiver!=null) {
 			registerReceiver(timedStepCompleteReceiver, new IntentFilter("timedStepComplete"));
 		}
-		
-//		temperatureReachedReceiver = new BroadcastReceiver() {
-//
-//			@Override
-//			public void onReceive(Context context, Intent intent) {				
-//				if (intent.getAction() == "temperatureReached") {
-//					DoSomethingWithTemp();
-//				}
-//			}
-//		};
-//		if (temperatureReachedReceiver!=null) {
-//			registerReceiver(temperatureReachedReceiver, new IntentFilter("temperatureReached"));
-//		}
 		
 		updatedTemperatureReceiver = new BroadcastReceiver() {
 
@@ -91,7 +85,7 @@ public class BrewDayActivity extends Activity {
 	private void HandleTempUpdate(float temp) {
 		RecipeStep rs = mRecipe.getCurrentStep();
 		
-		if (rs.getUnits() == "\u00B0F"){
+		if (rs.getUnits() == TEMPERATURE_UNITS){
 			rs.setValue((int)temp);
 			if ( Float.parseFloat(rs.getTarget().toString()) <= temp){
 				triggerNotification(temp);				
@@ -99,8 +93,6 @@ public class BrewDayActivity extends Activity {
 			updateFields();
 		}			
 	}
-	
-	private static final int TEMP_NOTIF_ID = 1;
 	
 	private void triggerNotification(float temp) {		
 			int icon = R.drawable.tempnot;
@@ -134,19 +126,20 @@ public class BrewDayActivity extends Activity {
 		
 		tvCurrentValue = (TextView) mActivityBrewDay.findViewById(R.id.tvCurrentValue);
 		
-		if (currentUnits != null && currentUnits.equalsIgnoreCase("minutes")) {
-			startCountDownTimer(convertMinutesToTimeInMillis(targetValue));
+		if (mCountDownTimer != null) {
+			//have to cancel the timer if we get here, otherwise it overwrites the TextView
+			mCountDownTimer.cancel();
 		}
-			
-
 		
-//
-//		if (currentValue != null && currentValue != "" && currentUnits != null
-//				&& currentUnits != "") {
-//			tvCurrentValue.setText(currentValue + " " + currentUnits);
-//		} else {
-//			tvCurrentValue.setText("");
-//		}
+		if (currentUnits != null && currentUnits.equalsIgnoreCase(TIME_UNITS)) {
+			startCountDownTimer(convertMinutesToMillis(targetValue));
+		} else if (currentValue != null && currentValue != "" && currentUnits != null
+				&& currentUnits != "") {
+			tvCurrentValue.setText(currentValue + " " + currentUnits);
+		} else {
+			tvCurrentValue.setText("");
+		}
+		
 
 		TextView tvCurrentInstruction = (TextView) mActivityBrewDay
 				.findViewById(R.id.tvCurrentInstruction);
@@ -196,31 +189,38 @@ public class BrewDayActivity extends Activity {
 
 	}
 
-	private long convertMinutesToTimeInMillis(Object targetValue) {
-		GregorianCalendar gc = new GregorianCalendar();
-		gc.roll(Calendar.MINUTE, ((Integer)targetValue).intValue());
-		return gc.getTimeInMillis();
+	private long convertMinutesToMillis(Object targetValue) {
+		//assumes that this Integer is in minutes
+		return ((Integer)targetValue).intValue() * 60 * 1000;
 	}
 
 	private void startCountDownTimer(long timeInMillis) {
 		
-		new CountDownTimer(timeInMillis, 1000) {
+		mCountDownTimer = new CountDownTimer(timeInMillis, 1000) {
 			
 			@Override
 			public void onTick(long millisUntilFinished) {
-				
 				//MM:SS
-				int remaining = (int) (millisUntilFinished/1000);
-				StringBuilder sb = new StringBuilder().append(remaining);
-				tvCurrentValue.setText(sb.toString());
+				String formattedTime = formatMillisToMinutesAndSeconds(millisUntilFinished);
+				tvCurrentValue.setText(formattedTime);
 			}
 			
 			@Override
 			public void onFinish() {
-				// TODO Auto-generated method stub
-				tvCurrentValue.setText("00:00");
+				tvCurrentValue.setText("--:--");
 			}
-		}.start();
+		};
+		
+		mCountDownTimer.start();
+	}
+	
+	private String formatMillisToMinutesAndSeconds(
+			long millisUntilFinished) {
+		DateFormat timeFormat = new SimpleDateFormat("mm:ss");
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(millisUntilFinished);
+		String formattedTime = timeFormat.format(gc.getTime());
+		return formattedTime;
 	}
 
 	public void nextHandler(View v) {
@@ -267,25 +267,7 @@ public class BrewDayActivity extends Activity {
             } 
         } 
     }; 
-     
-//    public void doneHandler(View v) {
-//    	if( mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0 ){
-//    	    AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-//    	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener) 
-//    	        .setNegativeButton("No", dialogClickListener).show(); 
-//    	}
-//    	else
-//    	{
-//	        finish();
-//    	}
-//    }
-//
-//	@Override
-//	public void finish() {
-//    	// TODO: add logic to mark recipe as done
-//		stopBrewing();
-//	}
-
+ 
 	public void pauseHandler(View v) {
 		Button pause = (Button) mActivityBrewDay.findViewById(R.id.bPause);
 		if (mPaused) {
@@ -297,23 +279,8 @@ public class BrewDayActivity extends Activity {
 		}
 		mPaused = !mPaused;
 	}
-//
-//	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-//		@Override
-//		public void onClick(DialogInterface dialog, int which) {
-//			switch (which) {
-//			case DialogInterface.BUTTON_POSITIVE:
-//				// Yes button clicked
-//				finish();
-//				break;
-//
-//			case DialogInterface.BUTTON_NEGATIVE:
-//				// No button clicked
-//				break;
-//			}
-//		}
-//	};
-	private TextView tvCurrentValue;
+	
+	
 
 	public void doneHandler(View v) {
 		if (mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
