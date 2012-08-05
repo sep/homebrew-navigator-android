@@ -32,7 +32,7 @@ public abstract class RecipeStep<T> {
 		return target;
 	}
 		
-	public abstract Boolean canMovetoNextStep();
+	public abstract void execute();
 
 	public boolean getIsNotCompleted() {		
 		return !isCompleted;
@@ -40,5 +40,9 @@ public abstract class RecipeStep<T> {
 	
 	public void setIsCompleted() {		
 		isCompleted = true;
+	}
+
+	public void setValue(T value) {
+		actualValue = value;
 	}	
 }

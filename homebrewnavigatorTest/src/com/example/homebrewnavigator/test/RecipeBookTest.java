@@ -13,11 +13,8 @@ public class RecipeBookTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {		
-		super.setUp();
-		
-		
-		daBook = new RecipeBook(new FakeRecipeRepository());
-		
+		super.setUp();		
+		daBook = new RecipeBook(new FakeRecipeRepository());		
 	}
 
 	public void testGetRecipeWillReturnMyRecipeByName(){
@@ -29,11 +26,22 @@ public class RecipeBookTest extends TestCase {
 	
 	public void testFireStepCriteriaMetIntentWhenWhenTimesUp() throws InterruptedException{
 		Recipe r = daBook.GetRecipe("My Special Brew");
-		TimedStep step2 = new TimedStep(1); 
-		
+		MockAlarmManager d = new MockAlarmManager();		
+		TimedStep step2 = new TimedStep(1, d); 
+		r.addStep(step2);
 		RecipeStep rs = r.getCurrentStep();
-		//Thread.sleep(100000);	
-		
+				
+		Assert.assertTrue(d.fired);				
+	}
+	
+	public void testFireIntentStepCriteriaMetTargetForTemperature(){
+		Recipe r = daBook.GetRecipe("My Special Brew");
+		MockAlarmManager d = new MockAlarmManager();		
+		TimedStep step2 = new TimedStep(1, d); 
+		r.addStep(step2);
+		RecipeStep rs = r.getCurrentStep();
+				
+		Assert.assertTrue(d.fired);		
 	}
 	
 	//TODO: Need a way to tell the step to start executing
@@ -42,11 +50,11 @@ public class RecipeBookTest extends TestCase {
 	
 	public void testGetCurrentStepReturnCorrectStep(){
 		Recipe r = new Recipe();
-		ManualRecipeStep step1 = new ManualRecipeStep();
+		ManualRecipeStep step1 = new ManualRecipeStep("Blah");
 		step1.setIsCompleted();
-		ManualRecipeStep step2 = new ManualRecipeStep();
-		ManualRecipeStep step3 = new ManualRecipeStep();	
-		ManualRecipeStep step4 = new ManualRecipeStep();
+		ManualRecipeStep step2 = new ManualRecipeStep("Blah");
+		ManualRecipeStep step3 = new ManualRecipeStep("Blah");	
+		ManualRecipeStep step4 = new ManualRecipeStep("Blah");
 		
 		r.addStep(step1);
 		r.addStep(step2);
