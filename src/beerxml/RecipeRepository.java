@@ -74,6 +74,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		RECIPE theRecipe = recipeForName(name);
 
 		Recipe toBrew = new Recipe();
+		toBrew.setName(name);
 		toBrew.addStep(new ManualRecipeStep("(Optional) rehydate irish moss in 1/2c water."));
 		toBrew.addStep(new TemperatureStep(80, "\u00B0F", 0, "Heat your water", false)); // TODO: change back to 150, or recipe based
 		toBrew.addStep(new TimedStep(1, "Steep grains for 15 minutes")); // TODO change back to 15/30 or recipe based

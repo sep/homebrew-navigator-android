@@ -17,6 +17,9 @@ public class JournalListAdapter extends ArrayAdapter<String> {
 	
 	private List<String> mBatches;
 	private Context mContext;
+	private TextView initialGrav;
+	private TextView finalGrav;	
+	private double abv;
 
 	public JournalListAdapter(Context context, List<String> batches){
 		super(context, R.layout.journal_row_layout, batches);
@@ -28,10 +31,9 @@ public class JournalListAdapter extends ArrayAdapter<String> {
 	private OnClickListener mEditDetailsListener = new OnClickListener() {
 		
 		public void onClick(View v) {
-			TextView target = (TextView)v;
-			
+			TextView target = (TextView)v;		
 			String contents = target.getText().toString();
-						
+			
 			Intent intent = new Intent();
 			intent.setClassName(MyContext.getContext(), JournalEditDetailsActivity.class.getName());
 			intent.putExtra("BatchName", contents);
