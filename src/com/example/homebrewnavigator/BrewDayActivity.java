@@ -34,6 +34,7 @@ public class BrewDayActivity extends Activity {
     private static final String TIME_UNITS = "minutes";
 	private static final String TEMPERATURE_UNITS = "\u00B0F";
 	private static final int TEMP_NOTIF_ID = 1;
+	private static final String CURRENT_RECIPE = "current_recipe";
 	
 	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
@@ -54,6 +55,22 @@ public class BrewDayActivity extends Activity {
 		mActivityBrewDay = (RelativeLayout) getLayoutInflater().inflate(
 				R.layout.activity_brew_day, null);
 		setContentView(mActivityBrewDay);
+
+		// read back our current state information (like what recipe we are on, and the current status of the recipe)
+		if( isBrewing()){
+			//get the recipe that we were brewing and where we were at
+			//reset the timers???
+//			mRecipe = (Recipe) savedInstanceState.getSerializable(CURRENT_RECIPE);
+			
+			mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
+
+		}
+		else
+		{
+			//get the recipe that we were told to get
+			mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
+		}
+		
 		timedStepCompleteReceiver = new BroadcastReceiver() {
 
 			@Override
@@ -127,9 +144,17 @@ public class BrewDayActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		mRecipe = (new FakeRecipeRepository()).GetRecipeByName("fake");
-
 		updateFields();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// save off our current state information (like what recipe we are on, and the current status of the recipe, timers???)
+		if( mRecipe != null ){
+			//outState.putSerializable(CURRENT_RECIPE, mRecipe);
+		}
+		
+		super.onSaveInstanceState(outState);
 	}
 
 	protected void updateFields() {
@@ -307,7 +332,7 @@ public class BrewDayActivity extends Activity {
     }; 
  
 	public void doneHandler(View v) {
-		if (mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
+		if (isBrewing() && mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Are you sure?")
 					.setPositiveButton("Yes", dialogClickListener)
