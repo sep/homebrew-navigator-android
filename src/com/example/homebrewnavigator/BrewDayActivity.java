@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -99,10 +100,15 @@ public class BrewDayActivity extends Activity {
 			Context context = getApplicationContext();
 			String contentTitle = "Temperature Step notification";
 			String contentText = "Your current temperature is " + temp;
+			
+			Intent notificationIntent = new Intent().setClassName(context, BrewDayActivity.class.getName());
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			
 			Notification.Builder builder = new Notification.Builder(context)
 	        .setContentTitle(contentTitle)
 	        .setContentText(contentText)
-	        .setSmallIcon(icon);
+	        .setSmallIcon(icon)
+	        .setContentIntent(pendingIntent);
 			
 			Notification noti = builder.getNotification();
 			
