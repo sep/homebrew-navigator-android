@@ -1,0 +1,71 @@
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TextView
+            android:id="@+id/journalTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <RatingBar
+            android:id="@+id/ratingBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/journalTitleText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp" />
+
+        <EditText
+            android:id="@+id/initialGrav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/ratingBar1"
+            android:layout_below="@+id/ratingBar1"
+            android:layout_marginTop="21dp"
+            android:ems="5"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/label1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/initialGrav"
+            android:layout_alignLeft="@+id/ratingBar1"
+            android:text="Original Gravity"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/endGrav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/initialGrav"
+            android:layout_centerVertical="true"
+            android:ems="5"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/label2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/label1"
+            android:layout_centerVertical="true"
+            android:text="Final Gravity"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/alcoholContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/label2"
+            android:layout_below="@+id/endGrav"
+            android:layout_marginTop="64dp"
+            android:text="Alcohol Content: "
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </RelativeLayout>

@@ -3,8 +3,11 @@ package com.example.homebrewnavigator;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
@@ -21,6 +24,22 @@ public class JournalListAdapter extends ArrayAdapter<String> {
 		mBatches = batches;
 		mContext = context;
 	}
+	
+	private OnClickListener mEditDetailsListener = new OnClickListener() {
+		
+		public void onClick(View v) {
+			TextView target = (TextView)v;
+			
+			String contents = target.getText().toString();
+						
+			Intent intent = new Intent();
+			intent.setClassName(MyContext.getContext(), JournalEditDetailsActivity.class.getName());
+			intent.putExtra("BatchName", contents);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			MyContext.getContext().startActivity(intent);
+		}
+	};
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -33,8 +52,14 @@ public class JournalListAdapter extends ArrayAdapter<String> {
 		batchName.setText(mBatches.get(position));
 		batchRating.setRating(position);
 		
+		batchName.setOnClickListener(mEditDetailsListener);
+		
 		return rowView;
 	}
+	
+	
+	
+		
 	
 	
 
