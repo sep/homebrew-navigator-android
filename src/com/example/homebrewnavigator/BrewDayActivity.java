@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -365,8 +366,9 @@ public class BrewDayActivity extends Activity {
 		if( !isBrewing() ){
 			finish();
 			BatchRepository batchRepo = new BatchRepository();
-			GregorianCalendar gc = new GregorianCalendar();
-			batchRepo.SaveBatch(new Batch(mRecipe.getName() + gc.getTimeInMillis(), mRecipe.getName()));
+			DateFormat unified24HourFormat = new SimpleDateFormat("yyyy MMMM dd HH:mm");
+			String dateStamp = unified24HourFormat.format(GregorianCalendar.getInstance().getTime());
+			batchRepo.SaveBatch(new Batch(mRecipe.getName() + " " + dateStamp, mRecipe.getName()));
 		}
 		else{
 		 	stopBrewing();
