@@ -1,0 +1,8 @@
+<resources>
+    
+    <string-array name="journal_array">
+        <item>Kolsch</item>
+        <item >Trippel</item>
+        <item >Charisma Cream Ale</item>
+    </string-array>
+</resources>

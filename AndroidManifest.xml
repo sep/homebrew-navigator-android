@@ -6,8 +6,9 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="15" />
-    <uses-permission android:name="android.permission.BLUETOOTH" /><uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -15,7 +16,6 @@
 
         android:theme="@android:style/Theme.Holo"
         android:name="MyContext">
-
         <activity
             android:name=".MainActivity"
             android:label="HomeBrew Navigator" >
@@ -25,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".RecipeManagerActivity"
             android:label="Recipe Manager" >
@@ -33,7 +32,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".ThermometerActivity"
             android:label="Thermometer" >
@@ -41,7 +39,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".BrewDayActivity"
             android:label="Brew Day" >
@@ -49,9 +46,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
-        <service android:enabled="true" android:name=".TemperatureService" android:label="HomebrewNavigator Temperature Monitoring Service" android:exported="false" />
-        
+
+        <service
+            android:name=".TemperatureService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="HomebrewNavigator Temperature Monitoring Service" />
+
+        <activity
+            android:name=".JournalActivity"
+            android:label="Journal" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

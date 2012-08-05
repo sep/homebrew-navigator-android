@@ -54,6 +54,6 @@ public class MainActivity extends Activity {
     }
     
     public void thermoHandler(View v) {
-    	startActivity(new Intent().setClassName(getApplicationContext(), ThermometerActivity.class.getName()));
+    	startActivity(new Intent().setClassName(getApplicationContext(), JournalActivity.class.getName()));
     }
 }
