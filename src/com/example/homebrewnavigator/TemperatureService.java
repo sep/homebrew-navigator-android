@@ -230,6 +230,9 @@ public class TemperatureService extends NonStopIntentService {
 		        		temperature = Float.parseFloat(temp);
 		        		connected = true;
 		        		fireNotification(temp);
+		        		Intent i = new Intent("updatedTemperature");
+		        		i.putExtra("temp", temperature);
+		        		MyContext.getContext().sendBroadcast(i);
 		        	}
 		        	catch(Exception e)
 		        	{

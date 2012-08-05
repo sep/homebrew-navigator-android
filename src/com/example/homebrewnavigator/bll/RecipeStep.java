@@ -40,5 +40,9 @@ public abstract class RecipeStep<T> {
 	
 	public void setIsCompleted() {		
 		isCompleted = true;
+	}
+
+	public void setValue(T value) {
+		actualValue = value;
 	}	
 }

@@ -1,5 +1,6 @@
 package com.example.homebrewnavigator.bll;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -20,10 +21,17 @@ public class TemperatureStep extends RecipeStep<Integer> {
 	public TemperatureStep(Integer target, String units, Integer actualValue,
 			String instruction) {
 		super(target, units, actualValue, instruction);
+		Intent serviceIntent = new Intent(MyContext.getContext(), TemperatureService.class);	        
+		MyContext.getContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+		dispatcher = new IntentDispatcher();
 	}
 
 	public TemperatureStep(Integer target, String instruction) {
 		super(target, "\u00B0F", null, instruction);
+		Intent serviceIntent = new Intent(MyContext.getContext(), TemperatureService.class);	        
+		MyContext.getContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+		
+		dispatcher = new IntentDispatcher();
 	}
 	
 	public TemperatureStep(int i, IIntentDispatcher d) {
@@ -31,14 +39,16 @@ public class TemperatureStep extends RecipeStep<Integer> {
 		dispatcher = d;
 		Intent serviceIntent = new Intent(MyContext.getContext(), TemperatureService.class);	        
 		MyContext.getContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
+		
+		dispatcher = new IntentDispatcher();		
 	}
-
+	
 	@Override
 	public void execute() {		
-		
+
 		  if (bound && service.isConnected()){
 			  float t =  service.GetLastTemperature();
-			  if (t >= this.target)				  
+			  if (t >= this.target)			  
 				  dispatcher.fireStepCompleteIntent();
 		  }		  
 	}
@@ -60,4 +70,11 @@ public class TemperatureStep extends RecipeStep<Integer> {
             bound = false;
         }
     };
+    
+  private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver(){
+	  @Override 
+	  public void onReceive(Context context, Intent intent) {
+		  execute();
+	  };
+  };
 }

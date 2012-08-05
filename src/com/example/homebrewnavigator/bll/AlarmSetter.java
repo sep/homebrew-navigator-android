@@ -16,6 +16,6 @@ public class AlarmSetter implements IAlarmSetter {
 		long milliseconds = System.currentTimeMillis() + minutes * 60 * 1000;
 		Intent i= new Intent("timedStepComplete");
 		PendingIntent pendingIntent=PendingIntent.getBroadcast(context, 0, i, 0);
-		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, milliseconds, pendingIntent);		
+		alarm.set(AlarmManager.RTC_WAKEUP, milliseconds, pendingIntent);		
 	}
 }
