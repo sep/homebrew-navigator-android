@@ -5,14 +5,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.homebrewnavigator.bll.FakeRecipeRepository;
 import com.example.homebrewnavigator.bll.Recipe;
@@ -135,7 +134,7 @@ public class BrewDayActivity extends Activity {
 		
 		tvCurrentValue = (TextView) mActivityBrewDay.findViewById(R.id.tvCurrentValue);
 		
-		if (currentUnits.equalsIgnoreCase("minutes")) {
+		if (currentUnits != null && currentUnits.equalsIgnoreCase("minutes")) {
 			startCountDownTimer(convertMinutesToTimeInMillis(targetValue));
 		}
 			
@@ -180,10 +179,11 @@ public class BrewDayActivity extends Activity {
 				mRecipe.getNextSteps());
 
 		lvUpcomingSteps.setAdapter(laUpcomingSteps);
+		
+		Button next = (Button) mActivityBrewDay.findViewById(R.id.bNextStep);
 
 		if (nextSteps == null || nextSteps.size() == 0) {
-			Button next = (Button) mActivityBrewDay
-					.findViewById(R.id.bNextStep);
+			
 			next.setEnabled(false);
 			lvUpcomingSteps.setVisibility(0);
 		}
@@ -230,7 +230,6 @@ public class BrewDayActivity extends Activity {
 		}
 
 		updateFields();
-<<<<<<< HEAD
     }
     
     public void playPauseHandler(View v) {
@@ -269,24 +268,23 @@ public class BrewDayActivity extends Activity {
         } 
     }; 
      
-    public void doneHandler(View v) {
-    	if( mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0 ){
-    	    AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-    	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener) 
-    	        .setNegativeButton("No", dialogClickListener).show(); 
-    	}
-    	else
-    	{
-	        finish();
-    	}
-    }
-
-	@Override
-	public void finish() {
-    	// TODO: add logic to mark recipe as done
-		stopBrewing();
-=======
-	}
+//    public void doneHandler(View v) {
+//    	if( mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0 ){
+//    	    AlertDialog.Builder builder = new AlertDialog.Builder(this); 
+//    	    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener) 
+//    	        .setNegativeButton("No", dialogClickListener).show(); 
+//    	}
+//    	else
+//    	{
+//	        finish();
+//    	}
+//    }
+//
+//	@Override
+//	public void finish() {
+//    	// TODO: add logic to mark recipe as done
+//		stopBrewing();
+//	}
 
 	public void pauseHandler(View v) {
 		Button pause = (Button) mActivityBrewDay.findViewById(R.id.bPause);
@@ -299,22 +297,22 @@ public class BrewDayActivity extends Activity {
 		}
 		mPaused = !mPaused;
 	}
-
-	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			case DialogInterface.BUTTON_POSITIVE:
-				// Yes button clicked
-				finish();
-				break;
-
-			case DialogInterface.BUTTON_NEGATIVE:
-				// No button clicked
-				break;
-			}
-		}
-	};
+//
+//	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//		@Override
+//		public void onClick(DialogInterface dialog, int which) {
+//			switch (which) {
+//			case DialogInterface.BUTTON_POSITIVE:
+//				// Yes button clicked
+//				finish();
+//				break;
+//
+//			case DialogInterface.BUTTON_NEGATIVE:
+//				// No button clicked
+//				break;
+//			}
+//		}
+//	};
 	private TextView tvCurrentValue;
 
 	public void doneHandler(View v) {
@@ -331,13 +329,12 @@ public class BrewDayActivity extends Activity {
 	@Override
 	public void finish() {
 		// TODO: add logic to mark recipe as done
->>>>>>> timer_updates_UI
-		super.finish();
-//	 	unregisterReceiver(temperatureReachedReceiver);
+
 	 	unregisterReceiver(updatedTemperatureReceiver);
-	 	unregisterReceiver(timedStepCompleteReceiver);		
+	 	unregisterReceiver(timedStepCompleteReceiver);
+		super.finish();
+//	 	unregisterReceiver(temperatureReachedReceiver);		
 	}
-<<<<<<< HEAD
 
 	@Override
 	public void onBackPressed() {
@@ -367,7 +364,5 @@ public class BrewDayActivity extends Activity {
         Boolean brewing = settings.getBoolean(getString(R.string.brewing_pref), false);
         return brewing;
     }
-=======
->>>>>>> timer_updates_UI
 
 }
