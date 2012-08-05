@@ -17,7 +17,7 @@ import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.TemperatureStep;
 import com.example.homebrewnavigator.bll.TimedStep;
 
-public class RecipeRepository {
+public class RecipeRepository implements Comparator<RECIPE>{
 
 	private static List<RECIPE> mRecipes;
 	private List<RECIPE> getRecipes() {
@@ -31,6 +31,7 @@ public class RecipeRepository {
 				Serializer serializer = new Persister();
 			
 				mRecipes = serializer.read(RECIPES.class, contents).gettheRecipes();
+				Collections.sort(mRecipes, this);
 			}catch(Exception e){
 				e.printStackTrace();
 				
@@ -168,5 +169,10 @@ public class RecipeRepository {
 		}
 			
 		return matched;
+	}
+
+	@Override
+	public int compare(RECIPE lhs, RECIPE rhs) {
+		return lhs.getNAME().compareToIgnoreCase(rhs.getNAME());
 	}
 }
