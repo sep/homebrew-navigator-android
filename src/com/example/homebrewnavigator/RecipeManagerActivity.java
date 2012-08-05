@@ -157,8 +157,8 @@ public class RecipeManagerActivity extends Activity {
 				Bundle savedInstanceState) {
 			View v = inflater.inflate(R.layout.category_recipe_list, container,
 					false);
-			View tv = v.findViewById(R.id.category);
-			((TextView) tv).setText(fagmentTitle);
+//			View tv = v.findViewById(R.id.category);
+//			((TextView) tv).setText(fagmentTitle);
 
 			final List<RECIPE> recipes = mRepository.recipesForCategory(fagmentTitle);
 			ListView lvRecipes = (ListView) v.findViewById(R.id.recipeList);
