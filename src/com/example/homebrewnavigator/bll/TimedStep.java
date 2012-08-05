@@ -27,6 +27,11 @@ public class TimedStep extends RecipeStep<Integer>{
 		dispatcher = new AlarmSetter();
 	}
 
+	public TimedStep(int i, String instruction, boolean isBoilStarter) {
+		super(i, "Minutes", 0, instruction, isBoilStarter, false);
+		dispatcher = new AlarmSetter();
+	}
+
 	@Override
 	public void execute() {
 		if( !isDispatched ){

@@ -19,8 +19,8 @@ public class TemperatureStep extends RecipeStep<Integer> {
 	private TemperatureService service;
 
 	public TemperatureStep(Integer target, String units, Integer actualValue,
-			String instruction) {
-		super(target, units, actualValue, instruction);
+			String instruction, boolean isBoilEnder) {
+		super(target, units, actualValue, instruction, false, isBoilEnder);
 		Intent serviceIntent = new Intent(MyContext.getContext(), TemperatureService.class);	        
 		MyContext.getContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
 		dispatcher = new IntentDispatcher();
