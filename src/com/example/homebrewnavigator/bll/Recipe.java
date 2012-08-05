@@ -2,14 +2,16 @@ package com.example.homebrewnavigator.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class Recipe {
 
 	private String name;
-	private List<RecipeStep> steps;
+	private ArrayList<RecipeStep> steps;	
+	private int currentIndex = 0;
 	
 	public Recipe(){
-		steps = new ArrayList<RecipeStep>();
+		steps = new ArrayList<RecipeStep>();	
 	}
 	
 	public String getName() {		
@@ -20,18 +22,29 @@ public class Recipe {
 		name = daName;		
 	}
 	
-	public List<RecipeStep> getSteps(){
-		return null;
+	public void addStep(RecipeStep step){
+		steps.add(step);
+	}
+	public RecipeStep getCurrentStep() {
+		if (steps.isEmpty() || currentIndex >= steps.size())
+			return null;	
+			
+		return (RecipeStep)steps.get(findNextStepIndex());
 	}
 
-	public RecipeStep getFirstStep() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RecipeStep> getNextSteps() {	
+		if (findNextStepIndex() == -1)
+			return new ArrayList<RecipeStep>();
+		
+		return steps.subList(findNextStepIndex()+1, steps.size());
 	}
-
-	public RecipeStep getNextStep() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	private int findNextStepIndex(){		
+		for(int i=0; i< steps.size(); i++){
+			if (((RecipeStep)steps.get(i)).getIsNotCompleted())
+				return i;					
+		}		
+		return -1;
 	}
 
 }

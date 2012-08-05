@@ -39,7 +39,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="105\u00B0F"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white" />
 
@@ -49,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Heat to 150\u00B0F"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -58,7 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Next Step" />
+                android:text="Next Step"
+                android:onClick="nextHandler" />
 
         </LinearLayout>
 
@@ -95,8 +94,7 @@
             android:paddingBottom="5dip"
             android:paddingLeft="15dip"
             android:paddingRight="15dip"
-            android:paddingTop="5dip" 
-            android:entries="@array/fakeUpcomingSteps">
+            android:paddingTop="5dip" >
                                 
         </ListView>
 
@@ -137,7 +135,6 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight=".66"
                         android:padding="5dip"
-                        android:text="60"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@android:color/white" />
 
@@ -148,17 +145,15 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight=".33"
                         android:padding="5dip"
-                        android:text="minutes remaining"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvExpectedEndTime"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dip"
-                    android:text="Done @ 2:00 PM"
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
@@ -170,7 +165,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Pause / Start" />
+                android:text="Pause"
+                android:onClick="pauseHandler" />
 
             <Button
                 android:id="@+id/bDone"
@@ -179,7 +175,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Done" />
+                android:text="Done"
+                android:onClick="doneHandler" />
 
         </LinearLayout>
 

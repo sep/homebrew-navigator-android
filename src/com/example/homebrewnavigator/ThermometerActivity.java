@@ -1,38 +1,36 @@
 package com.example.homebrewnavigator;
 
-import android.R.string;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.widget.TextView;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 
-import com.example.homebrewnavigator.R.id;
+import com.example.homebrewnavigator.TemperatureService.TemperatureBinder;
 
 
 public class ThermometerActivity extends Activity {
 	
-	private BluetoothSocket socket = null;
-	private BluetoothDevice[] bluetooth_devices = null;
-	private OutputStream out = null;
-	private InputStream in = null;
-	
-	private float temperature = 0;
-	private Thread thread;
 	private boolean keep_running;
+	
+	private boolean bound;
+	private TemperatureService service;
+	
+	private final class UpdateInfo
+	{
+		public String temperature;
+		public boolean connected;
+	}
+	
 	final Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			updateTempLabel((String)msg.obj);
+			updateTempLabel((UpdateInfo)msg.obj);
 		}
 		
 	};
@@ -43,81 +41,48 @@ public class ThermometerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thermometer);
         
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        Intent serviceIntent = new Intent(ThermometerActivity.this, TemperatureService.class);
         
-        //We should never actually use the below value
-        String[] devices_strings = { "No Adapter Found" };
+        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
         
-        if (adapter != null)
-        {
-        	Set<BluetoothDevice> devices = adapter.getBondedDevices();
-        	
-        	devices_strings = new String[devices.size()];
-            bluetooth_devices = new BluetoothDevice[devices.size()];
-            Iterator iter = devices.iterator();
-            
-            int i = 0;
-            while(iter.hasNext())
-            {
-              bluetooth_devices[i] = (BluetoothDevice)iter.next();
-              devices_strings[i] = bluetooth_devices[i].getName()+"  "+bluetooth_devices[i].getAddress();
-              i++;
-            }
-            
-            //TODO: If there's a bonded device, pick the first one and use it.
-            // Eventually we might want to use it based on the name it provides.
-            
-            try
-            {
-            	
-            	BluetoothDevice device = adapter.getRemoteDevice(bluetooth_devices[0].getAddress());
-            	//Connect to SPP service - build-in method is apparently broken.  this reflection is a workaround.
-            	Method m;
-            	m = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
-            	socket = (BluetoothSocket)m.invoke(device, Integer.valueOf(1)); 
-            	
-            	
-            	//socket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-            	socket.connect();
-                out = socket.getOutputStream();
-                in = socket.getInputStream();
-                
-                TextView status = (TextView) findViewById(R.id.textView3);
-                status.setText("Connected to " + device.getName());
-                
-                startTempThread(in);
-            }
-            catch( Exception e) {
-            	System.out.println(e.toString());
-            	adapter.cancelDiscovery();
-            	if(socket != null)
-            	{
-            		try { socket.close(); } catch(Exception e1) {}
-            		socket = null;
-            	}
-            	if(out != null)
-            	{
-            		try { out.close(); } catch(Exception e1) {}
-            		out = null;
-            	}
-            	if(in != null)
-            	{
-            		try { in.close(); } catch(Exception e1) {}
-            		in = null;
-            	}
-            	}
-            finally {
-
-            }
-        }
+        startTempThread();
     }
 	
-	private void updateTempLabel(String text)
+	/** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection connection = new ServiceConnection() {
+
+    	@Override
+        public void onServiceConnected(ComponentName className,
+                IBinder serviceBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TemperatureBinder binder = (TemperatureBinder) serviceBinder;
+            service = binder.getService();
+            bound = true;
+        }
+
+    	@Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            bound = false;
+        }
+    };
+	
+	private void updateTempLabel(UpdateInfo info)
 	{
 		TextView themoData = (TextView) findViewById(R.id.textView4);
-        themoData.setText("Temp: " + text);
-        
+        themoData.setText("Temp: " + info.temperature);
         themoData.postInvalidate();
+        
+        TextView connectedInfo = (TextView)findViewById(R.id.textView3);
+        if(info.connected)
+        {
+        	connectedInfo.setText( "Connected!" );
+        }
+        else
+        {
+        	connectedInfo.setText( "Not connected :(");
+        }
+        
+        connectedInfo.postInvalidate();
 	}
 	
 	@Override
@@ -126,21 +91,16 @@ public class ThermometerActivity extends Activity {
 		super.onStop();
 		
 		kill();
-	
-	    try
-	    {
-	      if (in != null) in.close();
-	      if (out != null) out.close();
-	      if (socket != null) socket.close();
-	    }
-	    catch (Exception e) { System.out.println(e.toString()); }
-	
-	    socket = null;
+		
+		if(bound)
+		{
+			unbindService(connection);
+			bound = false;
+		}
 	}
 	
-	public void startTempThread(InputStream in)
+	public void startTempThread()
 	{
-		this.in = in;
 		keep_running = true;
 		Thread thread = new Thread(runnable);
 		thread.start();
@@ -155,34 +115,30 @@ public class ThermometerActivity extends Activity {
 	  {
 	    public void run()
 	    {
-	      int ch;
-
 	      while(keep_running)
 	      {
 	        try
 	        {
-	        	String temp = ""; 
-	        	//allow breakout of loop while reading
-	        	while(keep_running && (ch = in.read() ) != 13 )
+	        	
+	            String temp = "00.0";
+	            boolean connStatus = false;
+	            
+	            if(service != null && bound)
 	            {
-	        		temp = temp + (char)ch;
+	            	float tempFlt = service.GetLastTemperature();
+	            	temp = Float.toString(tempFlt);
+	            	connStatus = service.isConnected();
 	            }
-	          // System.out.println("Read in "+ch);
-
-	          //TODO: What does this actually do for us?  Is "Nothing" 0xff?
-	          //if (index < 0)
-	          //{
-	          //  if (ch == 0xff) { index++; }
-	          //  else { index = -2; }
-	          //}
-	          //  else
-	          //{
-	            // System.out.println("index="+index);
-	              
+	            
+	            UpdateInfo info = new UpdateInfo();
+	            info.temperature = temp;
+	            info.connected = connStatus;
+	            
 	        	Message msg = handler.obtainMessage();
-	        	msg.obj = temp;
+	        	msg.obj = info;
 	        	handler.sendMessage(msg);
 	              
+	        	Thread.sleep(1000);
 	              //postInvalidate();
 	            //}
 	          }
