@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends Activity {
@@ -25,7 +26,13 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    public Boolean isBrewing(){
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
+		return super.onOptionsItemSelected(item);
+	}
+
+	public Boolean isBrewing(){
         SharedPreferences settings = getSharedPreferences(getString(R.string.prefs_name), 0);
         Boolean brewing = settings.getBoolean(getString(R.string.brewing_pref), false);
         return brewing;
