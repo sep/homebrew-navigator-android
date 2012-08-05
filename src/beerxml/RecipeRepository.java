@@ -86,11 +86,11 @@ public class RecipeRepository {
 		toBrew.addStep(new TimedStep(60, "Boil for 60 minutes", true));
 		
 		for(HOP h:theRecipe.getHOPS().gettheHops()) {
-			pairs.add(new StepPair("Add " + h.getNAME(), 60-h.getTIME()));
+			pairs.add(new StepPair("Add " + h.getNAME() + " hops", 60-h.getTIME()));
 		}	
 		if (theRecipe.getMISCS().gettheMiscs() != null) {
 			for(MISC m:theRecipe.getMISCS().gettheMiscs())
-				pairs.add(new StepPair(m.getNAME(), m.getTIME()));
+				pairs.add(new StepPair("Add " + m.getNAME(), m.getTIME()));
 		}
 		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
 
