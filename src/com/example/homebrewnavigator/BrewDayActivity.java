@@ -43,6 +43,7 @@ public class BrewDayActivity extends Activity {
 	private BroadcastReceiver updatedTemperatureReceiver;
 	private BroadcastReceiver timedStepCompleteReceiver;
 	private TextView tvCurrentValue;
+	private TextView tvTimeRemainingValue;
 	private CountDownTimer mCountDownTimer;
 	private CountDownTimer mOverallTimer;
 	
@@ -135,17 +136,41 @@ public class BrewDayActivity extends Activity {
 		RecipeStep currentStep = mRecipe.getCurrentStep();
 		String currentUnits = currentStep.getUnits();
 		Object currentValue = currentStep.getValue();
-		Object targetValue = currentStep.getTarget();
+		Object targetValue = currentStep.getTarget();		
+		Boolean startBoilStep = currentStep.getIsBoilStarter();
 		
 		tvCurrentValue = (TextView) mActivityBrewDay.findViewById(R.id.tvCurrentValue);
+		tvTimeRemainingValue = (TextView) mActivityBrewDay.findViewById(R.id.tvTimeRemainingValue);
+		TextView tvTimeRemainingText = (TextView) mActivityBrewDay.findViewById(R.id.tvTimeRemainingText);		
+		
+		if (currentUnits != null && currentUnits == TEMPERATURE_UNITS && targetValue != null
+				&& currentValue != null) {
+			tvTimeRemainingValue.setText(""
+					+ ((Integer) targetValue - (Integer) currentValue));
+			tvTimeRemainingText.setText(currentUnits + " remaining");
+		} else {
+			if( mOverallTimer != null ){
+				tvTimeRemainingText.setText("left in boil");
+			}
+			else{
+				tvTimeRemainingValue.setText("");
+				tvTimeRemainingText.setText("");
+			}
+		}
 		
 		if (mCountDownTimer != null) {
 			//have to cancel the timer if we get here, otherwise it overwrites the TextView
 			mCountDownTimer.cancel();
 		}
 		
+	
 		if (currentUnits != null && currentUnits.equalsIgnoreCase(TIME_UNITS)) {
-			startCountDownTimer(convertMinutesToMillis(targetValue));
+			if (startBoilStep){
+				startBoilCountDownTimer(convertMinutesToMillis(targetValue));				
+			}
+			else{
+				startCountDownTimer(convertMinutesToMillis(targetValue));
+			}
 		} else if (currentValue != null && currentValue != "" && currentUnits != null
 				&& currentUnits != "") {
 			tvCurrentValue.setText(currentValue + " " + currentUnits);
@@ -156,26 +181,7 @@ public class BrewDayActivity extends Activity {
 
 		TextView tvCurrentInstruction = (TextView) mActivityBrewDay
 				.findViewById(R.id.tvCurrentInstruction);
-		tvCurrentInstruction.setText(currentStep.getInstruction());
-
-		TextView tvTimeRemainingValue = (TextView) mActivityBrewDay
-				.findViewById(R.id.tvTimeRemainingValue);
-		TextView tvTimeRemainingText = (TextView) mActivityBrewDay
-				.findViewById(R.id.tvTimeRemainingText);
-
-		if (currentUnits != null && currentUnits != "" && targetValue != null
-				&& currentValue != null) {
-			tvTimeRemainingValue.setText(""
-					+ ((Integer) targetValue - (Integer) currentValue));
-			tvTimeRemainingText.setText(currentUnits + " remaining");
-		} else {
-			tvTimeRemainingValue.setText("");
-			tvTimeRemainingText.setText("");
-		}
-
-		TextView tvExpectedEndTime = (TextView) mActivityBrewDay
-				.findViewById(R.id.tvExpectedEndTime);
-		// tvExpectedEndTime.setText("Done @ 2:00 PM");
+		tvCurrentInstruction.setText(currentStep.getInstruction());		
 
 		List<RecipeStep> nextSteps = mRecipe.getNextSteps();
 		ListView lvUpcomingSteps = (ListView) mActivityBrewDay
@@ -220,6 +226,30 @@ public class BrewDayActivity extends Activity {
 		mCountDownTimer.start();
 	}
 	
+	private void startBoilCountDownTimer(long timeInMillis) {
+		
+		if (mOverallTimer == null){
+			tvCurrentValue.setText("");
+			mOverallTimer = new CountDownTimer(timeInMillis, 1000) {
+			
+			@Override
+			public void onTick(long millisUntilFinished) {
+				//MM:SS
+				String formattedTime = formatMillisToMinutesAndSeconds(millisUntilFinished);
+				tvTimeRemainingValue.setText(formattedTime);
+							
+			}
+			
+			@Override
+			public void onFinish() {
+				tvTimeRemainingValue.setText("--:--");
+			}
+		};
+		
+		
+			}
+	}
+	
 	private String formatMillisToMinutesAndSeconds(
 			long millisUntilFinished) {
 		DateFormat timeFormat = new SimpleDateFormat("mm:ss");
@@ -241,7 +271,16 @@ public class BrewDayActivity extends Activity {
 			if (currentStep != null) {
 				mRecipe.getCurrentStep().setIsCompleted();
 				ClearStepNotifications();	
-				mTimesUp = false;
+				
+				if (currentStep.getIsBoilStarter()){ //starting the boil kicks off at the end of the step
+					mOverallTimer.start();
+				}
+				if( mRecipe.getCurrentStep().getIsBoilEnder()){ //stopping the boil happens at the start of the next step
+					if( mOverallTimer != null){
+						mOverallTimer.cancel();
+						mOverallTimer = null;
+					}
+				}
 			}
 		}
 		updateFields();

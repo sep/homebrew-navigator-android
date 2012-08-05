@@ -4,10 +4,10 @@ public class FakeRecipeRepository implements IRecipeRepository {
 
 	public Recipe GetRecipeByName(String name) {
 		Recipe fakeRecipe = new Recipe();
-		fakeRecipe.addStep(new TemperatureStep(50, "\u00B0F", 105, "Raise Temperature to 50\u00B0F"));
+		fakeRecipe.addStep(new TemperatureStep(50, "\u00B0F", 105, "Raise Temperature to 50\u00B0F",false));
 		fakeRecipe.addStep(new TimedStep(1, "Steep for 15 minutes"));
-		fakeRecipe.addStep(new TemperatureStep(212, "\u00B0F", 150, "Raise to a boil"));
-		fakeRecipe.addStep(new TimedStep(15, "Boil for 15 minutes"));
+		fakeRecipe.addStep(new TemperatureStep(212, "\u00B0F", 150, "Raise to a boil",false));
+		fakeRecipe.addStep(new TimedStep(60, "Boil for 60 minutes", true));
 		fakeRecipe.addStep(new ManualRecipeStep("Add Glacier Hops"));
 		fakeRecipe.addStep(new TimedStep(15, "Boil for 15 minutes"));
 		fakeRecipe.addStep(new ManualRecipeStep("Add Glacier Hops"));
@@ -16,8 +16,8 @@ public class FakeRecipeRepository implements IRecipeRepository {
 		fakeRecipe.addStep(new TimedStep(10, "Boil for 10 minutes"));
 		fakeRecipe.addStep(new ManualRecipeStep("Add Cascade Hops"));
 		fakeRecipe.addStep(new TimedStep(5, "Boil for 5 minutes"));
+		fakeRecipe.addStep(new TemperatureStep(80, "\u00B0F", 212, "Chill Wort", true));
 		fakeRecipe.addStep(new ManualRecipeStep("Add Yeast"));
-		fakeRecipe.addStep(new TemperatureStep(80, "\u00B0F", 212, "Chill Wort"));
 		fakeRecipe.addStep(new ManualRecipeStep("Move to Fermenter"));
 		return fakeRecipe;
 	}
