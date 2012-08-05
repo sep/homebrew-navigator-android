@@ -37,7 +37,6 @@ public class BrewDayActivity extends Activity {
 	
 	private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
-	private Boolean mPaused = true;
 	private Boolean mTimesUp = false;
 	private NotificationManager  notiManager;
 	private RingtoneManager ringToneManager;
@@ -194,13 +193,6 @@ public class BrewDayActivity extends Activity {
 			next.setEnabled(false);
 			lvUpcomingSteps.setVisibility(0);
 		}
-		else if( isBrewing() && !mPaused ){
-			next.setEnabled(true);
-		}
-		else{
-			next.setEnabled(false);
-		}
-
 	}
 
 	private long convertMinutesToMillis(Object targetValue) {
@@ -238,13 +230,20 @@ public class BrewDayActivity extends Activity {
 	}
 
 	public void nextHandler(View v) {
-		RecipeStep currentStep = mRecipe.getCurrentStep();
-		if (currentStep != null) {
-			mRecipe.getCurrentStep().setIsCompleted();
-			ClearStepNotifications();	
-			mTimesUp = false;
+		if( !isBrewing() ){
+	    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
+	    	next.setText("Next Step");
+	    	startBrewing();
 		}
-
+		else
+		{
+			RecipeStep currentStep = mRecipe.getCurrentStep();
+			if (currentStep != null) {
+				mRecipe.getCurrentStep().setIsCompleted();
+				ClearStepNotifications();	
+				mTimesUp = false;
+			}
+		}
 		updateFields();
     }
     
@@ -252,26 +251,6 @@ public class BrewDayActivity extends Activity {
     	notiManager.cancel(TEMP_NOTIF_ID+1);
 	}
 
-	public void playPauseHandler(View v) {
-    	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
-    	if( mPaused || !isBrewing() ){
-    		if( !isBrewing() ){
-    			startBrewing();
-    		}
-    		mPaused = false;
-    		//TODO: handle unpausing any timers?
-    		pause.setText("Pause");
-    	}
-    	else
-    	{
-    		mPaused = true;
-    		// TODO: handle pausing any timers?
-    		pause.setText("Play");
-    	}
-    	
-    	updateFields();
-    }
-    
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() { 
         @Override 
         public void onClick(DialogInterface dialog, int which) { 
@@ -288,20 +267,6 @@ public class BrewDayActivity extends Activity {
         } 
     }; 
  
-	public void pauseHandler(View v) {
-		Button pause = (Button) mActivityBrewDay.findViewById(R.id.bPause);
-		if (mPaused) {
-			// TODO: handle unpausing
-			pause.setText("Pause");
-		} else {
-			// TODO: handle pausing
-			pause.setText("Play");
-		}
-		mPaused = !mPaused;
-	}
-	
-	
-
 	public void doneHandler(View v) {
 		if (mRecipe.getNextSteps() != null && mRecipe.getNextSteps().size() > 0) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

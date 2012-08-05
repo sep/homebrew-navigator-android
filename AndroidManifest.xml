@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name=".BrewDayActivity"
-            android:label="Brew Day" >
+            android:label="Brew Day" android:launchMode="singleTop">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
