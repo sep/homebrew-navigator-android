@@ -55,9 +55,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
+                android:onClick="nextHandler"
                 android:padding="5dip"
                 android:text="Next Step"
-                android:onClick="nextHandler" />
+                android:enabled="false" />
 
         </LinearLayout>
 
@@ -165,8 +166,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight=".33"
                 android:padding="5dip"
-                android:text="Pause"
-                android:onClick="pauseHandler" />
+                android:text="Start"
+                android:onClick="playPauseHandler" />
 
             <Button
                 android:id="@+id/bDone"

@@ -21,14 +21,12 @@ import com.example.homebrewnavigator.bll.RecipeStep;
 public class BrewDayActivity extends Activity {
     private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
-	private Boolean mBrewing = false;
-	private Boolean mPaused = false;
+	private Boolean mPaused = true;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Resources res = getResources();
-        mBrewing = isBrewing();
         mActivityBrewDay = (RelativeLayout)getLayoutInflater().inflate(R.layout.activity_brew_day,null);
         setContentView(mActivityBrewDay);
     }
@@ -84,12 +82,19 @@ public class BrewDayActivity extends Activity {
         UpcomingStepsAdapter laUpcomingSteps = new UpcomingStepsAdapter(this, mRecipe.getNextSteps());
 		
 	    lvUpcomingSteps.setAdapter(laUpcomingSteps);
+    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
+    	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
 
-		if( nextSteps == null || nextSteps.size() == 0 )
-		{
-	    	Button next = (Button)mActivityBrewDay.findViewById(R.id.bNextStep);
+		if( nextSteps == null || nextSteps.size() == 0 ){
 	    	next.setEnabled(false);
+	    	pause.setEnabled(false);
 			lvUpcomingSteps.setVisibility(0);
+		}
+		else if( isBrewing() && !mPaused ){
+			next.setEnabled(true);
+		}
+		else{
+			next.setEnabled(false);
 		}
 
 	}
@@ -103,18 +108,24 @@ public class BrewDayActivity extends Activity {
 		updateFields();
     }
     
-    public void pauseHandler(View v) {
+    public void playPauseHandler(View v) {
     	Button pause = (Button)mActivityBrewDay.findViewById(R.id.bPause);
-    	if( mPaused ){
-    		// TODO: handle unpausing
+    	if( mPaused || !isBrewing() ){
+    		if( !isBrewing() ){
+    			startBrewing();
+    		}
+    		mPaused = false;
+    		//TODO: handle unpausing any timers?
     		pause.setText("Pause");
     	}
     	else
     	{
-    		// TODO: handle pausing
+    		mPaused = true;
+    		// TODO: handle pausing any timers?
     		pause.setText("Play");
     	}
-    	mPaused = !mPaused;
+    	
+    	updateFields();
     }
     
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() { 
@@ -145,10 +156,6 @@ public class BrewDayActivity extends Activity {
     	}
     }
 
-    public void startHandler(View v) {
-    	startBrewing();
-    }
-
 	@Override
 	public void finish() {
     	// TODO: add logic to mark recipe as done
@@ -159,7 +166,7 @@ public class BrewDayActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		// if we've started, purposely do nothing
-		if( !mBrewing )
+		if( !isBrewing() )
 		{
 			super.onBackPressed();
 		}
