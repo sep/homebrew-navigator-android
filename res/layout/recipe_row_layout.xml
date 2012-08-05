@@ -1,0 +1,35 @@
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TextView 
+            android:id="@+id/recipeName"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Test This"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textIBU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I B U"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:padding="15dip" />
+            <TextView
+                android:id="@+id/textABV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A B V"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:padding="15dip" />
+            
+        </LinearLayout>
+
+    </LinearLayout>

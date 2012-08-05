@@ -187,7 +187,7 @@ public class RecipeManagerActivity extends Activity {
 			private final List<RECIPE> values;
 
 			public RecipeListAdapter(Context context, List<RECIPE> recipes) {
-				super(context, android.R.layout.simple_list_item_1, recipes);
+				super(context, R.layout.recipe_row_layout, recipes);
 
 				this.context = context;
 				this.values = recipes;
@@ -200,10 +200,15 @@ public class RecipeManagerActivity extends Activity {
 				// TODO: go make row view
 				// TODO: set details on that row view
 				View rowView = inflater.inflate(
-						android.R.layout.simple_list_item_1, parent, false);
+						R.layout.recipe_row_layout, parent, false);
 				TextView textView = (TextView) rowView
-						.findViewById(android.R.id.text1);
+						.findViewById(R.id.recipeName);
 				textView.setText(values.get(position).getNAME());
+				
+				TextView ibu = (TextView) rowView.findViewById(R.id.textIBU);
+				TextView abv = (TextView) rowView.findViewById(R.id.textABV);
+				ibu.setText("IBU - 24");
+				abv.setText("ABV - 8");
 
 				return rowView;
 			}
