@@ -103,7 +103,7 @@ public class BrewDayActivity extends Activity {
 	
 	private void triggerTendBrewNotification() {
 		if (isBrewing()){
-			int icon = R.drawable.tempnot;
+			int icon = R.drawable.notification;
 			Context context = getApplicationContext();
 			String contentTitle = "Step Complete Notification";	
 			
