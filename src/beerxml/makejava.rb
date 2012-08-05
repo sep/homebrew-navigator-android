@@ -1,6 +1,6 @@
 classes = {
   "RECIPES" => [{name: "theRecipes", required: true, type: 'List<RECIPE>', elementtag: "@ElementList"}],
-  "MISCS" => [{name: "theMiscs", required: true, type: 'List<MISC>', elementtag: "@ElementList"}],
+  "MISCS" => [{name: "theMiscs", required: false, type: 'List<MISC>', elementtag: "@ElementList"}],
   "STYLES" => [{name: "theStyles", required: true, type: 'List<STYLE>', elementtag: "@ElementList"}],
   "YEASTS" => [{name: "theYeasts", required: true, type: 'List<YEAST>', elementtag: "@ElementList"}],
   "HOPS" => [{name: "theHops", required: true, type: 'List<HOP>', elementtag: "@ElementList"}],
