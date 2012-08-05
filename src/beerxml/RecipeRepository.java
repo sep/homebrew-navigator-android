@@ -74,10 +74,10 @@ public class RecipeRepository {
 
 		Recipe toBrew = new Recipe();
 		toBrew.addStep(new ManualRecipeStep("(Optional) rehydate irish moss in 1/2c water."));
-		toBrew.addStep(new TemperatureStep(150, "\u00B0F", 0, "Heat your water", false));
-		toBrew.addStep(new TimedStep(15, "Steep grains for 15 minutes"));
+		toBrew.addStep(new TemperatureStep(80, "\u00B0F", 0, "Heat your water", false)); // TODO: change back to 150, or recipe based
+		toBrew.addStep(new TimedStep(1, "Steep grains for 15 minutes")); // TODO change back to 15/30 or recipe based
 		toBrew.addStep(new ManualRecipeStep("Add your extracts."));
-		toBrew.addStep(new TemperatureStep(212, "\u00B0F", 0, "Raise to a boil",false));
+		toBrew.addStep(new TemperatureStep(90, "\u00B0F", 0, "Raise to a boil",false)); // TODO change back to 212
 		
 		// get the hops, and the moss/miscs
 		
