@@ -47,7 +47,7 @@ public class RECIPE {
   @Element(required=true)
   private FERMENTABLES FERMENTABLES;
 
-  @Element(required=true)
+  @Element(required=false)
   private MISCS MISCS;
 
   @Element(required=true)

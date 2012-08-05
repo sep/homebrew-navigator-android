@@ -1,8 +1,8 @@
 package com.example.homebrewnavigator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import beerxml.RecipeRepository;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -48,13 +48,14 @@ public class RecipeManagerActivity extends Activity {
 		TabsAdapter tabsAdapter = new TabsAdapter(this, viewPager);
 		
 		
-		ArrayList<String> categories = new ArrayList<String>();
-		categories.add("Stout");
-		categories.add("IPA");
-		categories.add("Porter");
-		categories.add("Wheat");
-
-		for (String category : categories) {
+//		ArrayList<String> categories = new ArrayList<String>();
+//		categories.add("English Pale Ale");
+//		categories.add("Australian Pale Ale");
+//		categories.add("Porter");
+//		categories.add("Scottish and Irish Ale");
+//		categories.add("German Wheat and Rye Beer");
+		
+		for (String category : new RecipeRepository().getCategories()) {
 			Bundle bundle = new Bundle();
 			bundle.putString("category", category);
 
@@ -121,23 +122,26 @@ public class RecipeManagerActivity extends Activity {
 			return newFrag;
 		}
         
-        String bobIsAwesome = "truth";
+        String fagmentTitle = "truth";
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			if (bundledArguments != null && bundledArguments.containsKey("category")){
-				bobIsAwesome = bundledArguments.getString("category");
+				fagmentTitle = bundledArguments.getString("category");
 			}
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
+				Bundle savedInstanceState){
 			View v = inflater.inflate(R.layout.category_recipe_list, container,
 					false);
 			View tv = v.findViewById(R.id.category);
-			((TextView) tv).setText(bobIsAwesome);
+			((TextView) tv).setText(fagmentTitle);
+			RecipeRepository rp = new RecipeRepository();
+			int cnt = rp.recipesForCategory(fagmentTitle).size();
+			
 			tv.setBackgroundDrawable(getResources().getDrawable(
 					android.R.drawable.gallery_thumb));
 			return v;

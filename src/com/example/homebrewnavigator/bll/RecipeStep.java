@@ -1,6 +1,5 @@
 package com.example.homebrewnavigator.bll;
 
-import java.util.GregorianCalendar;
 
 public abstract class RecipeStep<T> {
 	protected T target;
