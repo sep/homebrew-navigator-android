@@ -15,9 +15,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if( isBrewing() ){
-        	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
-        }
+        getActionBar().setTitle("HomeBrew Navigator");
     }
 
     @Override
@@ -30,6 +28,18 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
     	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Commenting out this code because it is causing issues.
+		//If we want this behavior, there is a better way to do it.
+		//We should simply clearTop and startActivity...but this can ultimately
+		//result in keeping you stuck on the brew-day page.
+//		if( isBrewing() ){
+//        	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
+//        }
 	}
 
 	public Boolean isBrewing(){
