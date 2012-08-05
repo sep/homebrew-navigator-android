@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -18,14 +19,16 @@ import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
 
 public class BrewDayActivity extends Activity {
-	private RelativeLayout mActivityBrewDay = null;
+    private RelativeLayout mActivityBrewDay = null;
 	private Recipe mRecipe = null;
+	private Boolean mBrewing = false;
 	private Boolean mPaused = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Resources res = getResources();
+        mBrewing = isBrewing();
         mActivityBrewDay = (RelativeLayout)getLayoutInflater().inflate(R.layout.activity_brew_day,null);
         setContentView(mActivityBrewDay);
     }
@@ -142,16 +145,45 @@ public class BrewDayActivity extends Activity {
     	}
     }
 
+    public void startHandler(View v) {
+    	startBrewing();
+    }
+
 	@Override
 	public void finish() {
     	// TODO: add logic to mark recipe as done
+		stopBrewing();
 		super.finish();
 	}
-    
-    
-    
 
-	
+	@Override
+	public void onBackPressed() {
+		// if we've started, purposely do nothing
+		if( !mBrewing )
+		{
+			super.onBackPressed();
+		}
+	}
+    
+    public void startBrewing(){
+        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(getString(R.string.brewing_pref), true);
+        editor.commit();
+    }
+    
+    public void stopBrewing(){
+        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(getString(R.string.brewing_pref), false);
+        editor.commit();
+    }
+    
+    public Boolean isBrewing(){
+        SharedPreferences settings = getSharedPreferences(getString(R.string.prefs_name), 0);
+        Boolean brewing = settings.getBoolean(getString(R.string.brewing_pref), false);
+        return brewing;
+    }
 
 }
 
