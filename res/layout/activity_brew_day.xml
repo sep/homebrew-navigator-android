@@ -57,8 +57,7 @@
                 android:layout_weight=".30"
                 android:onClick="nextHandler"
                 android:padding="5dip"
-                android:text="Next Step"
-                android:enabled="false" />
+                android:text="Start Brew" />
 
         </LinearLayout>
 
@@ -178,16 +177,6 @@
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/bPause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight=".30"
-                android:padding="5dip"
-                android:text="Start"
-                android:onClick="playPauseHandler" />
 
             <Button
                 android:id="@+id/bDone"
