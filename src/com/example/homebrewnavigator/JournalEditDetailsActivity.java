@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -27,9 +28,22 @@ public class JournalEditDetailsActivity extends Activity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
+            case R.id.save:
+            	saveDetails();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    
+    private void saveDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.journal_entry_menu, menu);
+        return true;
     }
 
 	@Override
