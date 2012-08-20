@@ -1,7 +1,5 @@
 package com.example.homebrewnavigator.bll;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class TimedStep extends RecipeStep<Integer>{
 	private IAlarmSetter dispatcher;

@@ -6,11 +6,9 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
 
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;

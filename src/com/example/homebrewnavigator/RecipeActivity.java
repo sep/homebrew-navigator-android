@@ -18,8 +18,6 @@ import beerxml.HOP;
 import beerxml.MISC;
 import beerxml.RECIPE;
 import beerxml.RecipeRepository;
-import beerxml.RecipeRepository.StepComparator;
-import beerxml.RecipeRepository.StepPair;
 import beerxml.YEAST;
 
 public class RecipeActivity extends Activity {

@@ -9,7 +9,6 @@ import android.os.IBinder;
 
 import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.TemperatureService;
-import com.example.homebrewnavigator.ThermometerActivity;
 import com.example.homebrewnavigator.TemperatureService.TemperatureBinder;
 
 public class TemperatureStep extends RecipeStep<Integer> {

@@ -4,8 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,7 +30,6 @@ import beerxml.RecipeRepository;
 
 import com.example.homebrewnavigator.bll.Batch;
 import com.example.homebrewnavigator.bll.BatchRepository;
-import com.example.homebrewnavigator.bll.FakeRecipeRepository;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
 
