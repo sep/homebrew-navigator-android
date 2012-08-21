@@ -9,5 +9,6 @@
     
     <string name="recipe_button"><b>Recipe Management</b> \n <i>Click here to view and manage your recipes. </i></string>
     <string name="journal_button"><b>Journal Entries</b> \n <i>Click here to view previous batches and notes. </i></string>
+    <string name="app_version">1.1</string>
 
 </resources>
