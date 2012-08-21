@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'active_support/inflector'
+
 classes = {
   "RECIPES" => [{name: "theRecipes", required: true, type: 'List<RECIPE>', elementtag: "@ElementList"}],
   "MISCS" => [{name: "theMiscs", required: false, type: 'List<MISC>', elementtag: "@ElementList"}],
@@ -146,6 +149,32 @@ classes = {
   ]
 }
 
+SQLITE_TYPES = {
+"String" => "TEXT",
+"double" => "DOUBLE",
+"bool" => "BOOLEAN"
+}
+def get_columns(attributes)
+  attributes.map {|attr| get_column(attr) }
+end
+
+def get_column(attribute)
+  type = attribute[:type]
+  type = 'bool' if attribute[:type] == 'String' && attribute[:list] && attribute[:list][0] == 'TRUE'
+
+  "#{attribute[:name].downcase} #{SQLITE_TYPES[type]}#{" NOT NULL" if attribute[:required]}"
+end
+
+classes.each_key do |class_name|
+  is_plural = class_name[-1] == "S"
+
+  next if is_plural
+
+  puts "create table #{class_name.downcase.pluralize} (id INTEGER PRIMARY KEY, #{get_columns(classes[class_name]).join(', ')});"
+end
+
+
+exit
 classes.each_key do |class_name|
   File.open("#{class_name}.java", 'w') do |f|
     is_plural = class_name[-1] == "S"
