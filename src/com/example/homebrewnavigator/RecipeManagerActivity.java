@@ -205,10 +205,12 @@ public class RecipeManagerActivity extends Activity {
 						.findViewById(R.id.recipeName);
 				textView.setText(values.get(position).getNAME());
 				
+				RECIPE recipe = values.get(position);
+
 				TextView ibu = (TextView) rowView.findViewById(R.id.textIBU);
 				TextView abv = (TextView) rowView.findViewById(R.id.textABV);
-				ibu.setText("IBU - 24");
-				abv.setText("ABV - 8");
+				ibu.setText("IBU: " + recipe.getSTYLE().getIBU_MIN() + " - " + recipe.getSTYLE().getIBU_MAX());
+				abv.setText("ABV: " + recipe.getSTYLE().getABV_MIN() + " - " + recipe.getSTYLE().getABV_MAX());
 
 				return rowView;
 			}
