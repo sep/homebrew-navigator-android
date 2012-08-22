@@ -10,6 +10,7 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.bll.ManualRecipeStep;
@@ -19,6 +20,12 @@ import com.example.homebrewnavigator.bll.TimedStep;
 
 public class RecipeRepository implements Comparator<RECIPE>{
 
+	public static SQLiteOpenHelper _db;
+	
+	public RecipeRepository(SQLiteOpenHelper db) {
+		_db = db;
+	}
+	
 	private static List<RECIPE> mRecipes;
 	private List<RECIPE> getRecipes() {
 		if (mRecipes == null)
@@ -34,10 +41,27 @@ public class RecipeRepository implements Comparator<RECIPE>{
 				Collections.sort(mRecipes, this);
 			}catch(Exception e){
 				e.printStackTrace();
-				
 			}
 		}
 		return mRecipes;
+	}
+	
+	public Boolean ImportRecipesFromXml(InputStream xmlStream) {
+		try {
+			Serializer serializer = new Persister();
+			List<RECIPE> recipes = serializer.read(RECIPES.class,  xmlStream).gettheRecipes();
+			for (RECIPE recipe : recipes) {
+				InsertRecipe(recipe);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private void InsertRecipe(RECIPE recipe) {
+		// insert into database
 	}
 
 	public RECIPE recipeForName(String name) {

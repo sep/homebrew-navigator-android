@@ -69,7 +69,7 @@ public class RecipeManagerActivity extends Activity {
 
 		TabsAdapter tabsAdapter = new TabsAdapter(this, viewPager);
 
-		for (String category : new RecipeRepository().getCategories()) {
+		for (String category : new RecipeRepository(MyContext.getDb()).getCategories()) {
 			Bundle bundle = new Bundle();
 			bundle.putString("category", category);
 
@@ -129,7 +129,7 @@ public class RecipeManagerActivity extends Activity {
 		public RecipeCategoryListFragment() {
 			super();
 			mBundledArguments = getArguments();
-			mRepository = new RecipeRepository();
+			mRepository = new RecipeRepository(MyContext.getDb());
 		}
 
 		static RecipeCategoryListFragment newInstance(Bundle bundle,
