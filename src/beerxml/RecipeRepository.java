@@ -9,6 +9,7 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -17,6 +18,8 @@ import com.example.homebrewnavigator.bll.ManualRecipeStep;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.TemperatureStep;
 import com.example.homebrewnavigator.bll.TimedStep;
+
+import db.ContentValueBuilder;
 
 public class RecipeRepository implements Comparator<RECIPE>{
 
@@ -60,10 +63,105 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		}
 	}
 	
+	private boolean getBool(String boolStr) {
+		return boolStr == null ? false : boolStr.equalsIgnoreCase("TRUE");
+	}
+	
+	private double getDouble(String doubleStr) {
+		try {
+			return Double.parseDouble(doubleStr);
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
 	private void InsertRecipe(RECIPE recipe) {
+		long recipeId = _db.getWritableDatabase().insert("recipes", null, ContentValueBuilder.Create()
+				.String("asst_brewer", recipe.getASST_BREWER())
+				.String("brewer", recipe.getBREWER())
+				.String("date", recipe.getDATE())
+				.Boolean("forced_carbonation",  getBool(recipe.getFORCED_CARBONATION()))
+				.Integer("age", (int)recipe.getAGE())
+				.Integer("age_temp", (int)recipe.getAGE_TEMP())
+				.Double("batch_size", recipe.getBATCH_SIZE())
+				.Double("boil_size", recipe.getBOIL_SIZE())
+				.Integer("carbonation", (int)recipe.getCARBONATION())
+				.Integer("boil_time", (int)recipe.getBOIL_TIME())
+				.String("date", recipe.getDATE())
+				.Double("efficiency", recipe.getEFFICIENCY())
+				.Integer("fermentation_stages", (int)recipe.getFERMENTATION_STAGES())
+				.Double("fg", recipe.getFG())
+				.Double("og", recipe.getOG())
+				.Double("keg_priming_factor", recipe.getKEG_PRIMING_FACTOR())
+				.String("name", recipe.getNAME())
+				.String("notes", recipe.getNOTES())
+				.Integer("primary_age", (int)recipe.getPRIMARY_AGE())
+				.Integer("primary_temp", (int)recipe.getPRIMARY_TEMP())
+				.Integer("secondary_age", (int)recipe.getSECONDARY_AGE())
+				.Integer("secondary_temp", (int)recipe.getSECONDARY_TEMP())
+				.Integer("tertiary_age", (int)recipe.getTERTIARY_AGE())
+				.Integer("tertiary_temp", (int)recipe.getTERTIARY_TEMP())
+				.Double("priming_sugar_equiv", recipe.getPRIMING_SUGAR_EQUIV())
+				.String("priming_sugar_name", recipe.getPRIMING_SUGAR_NAME())
+				.String("taste_notes", recipe.getTASTE_NOTES())
+				.Double("taste_rating", recipe.getTASTE_RATING())
+				.String("type", recipe.getTYPE())
+				.Double("version", recipe.getVERSION())
+				.getValues());
+		
+		for (HOP hop : recipe.getHOPS().gettheHops()) {
+			_db.getWritableDatabase().insert("hops", null, ContentValueBuilder.Create()
+					.String("form", hop.getFORM())
+					.String("name", hop.getNAME())
+					.String("notes", hop.getNOTES())
+					.String("origin", hop.getORIGIN())
+					.String("substitutes", hop.getSUBSTITUTES())
+					.String("type", hop.getTYPE())
+					.String("use", hop.getUSE())
+					.Double("alpha", hop.getALPHA())
+					.Double("amount", hop.getAMOUNT())
+					.Double("beta", hop.getBETA())
+					.Double("caryophyllene", hop.getCARYOPHYLLENE())
+					.Double("cohumulone", hop.getCOHUMULONE())
+					.Double("hsi", hop.getHSI())
+					.Double("humulene", hop.getHUMULENE())
+					.Double("myrcene", hop.getMYRCENE())
+					.Double("time", hop.getTIME())
+					.Double("version", hop.getVERSION())
+					.Long("recipe_id", recipeId)
+					.getValues());
+		}
+
+		for (FERMENTABLE f : recipe.getFERMENTABLES().gettheFermentables()) {
+			_db.getWritableDatabase().insert("fermentables", null, ContentValueBuilder.Create()
+					.Boolean("add_after_bool", getBool(f.getADD_AFTER_BOIL()))
+					.Double("coarse_fine_diff", getDouble(f.getCOARSE_FINE_DIFF()))
+					.Double("amount", f.getAMOUNT())
+					.Double("color", f.getCOLOR())
+					.Double("diastic_power", getDouble(f.getDIASTIC_POWER()))
+					.Double("ibu_gal_per_lb", f.getIBU_GAL_PER_LB())
+					.Double("max_in_batch", f.getMAX_IN_BATCH())
+					.Double("moisture", getDouble(f.getMOISTURE()))
+					.String("name", f.getNAME())
+					.String("notes", f.getNOTES())
+					.String("origin", f.getORIGIN())
+					.Double("protein", getDouble(f.getPROTEIN()))
+					.Boolean("recommended_mash", getBool(f.getRECOMMENDED_MASH()))
+					.String("supplier", f.getSUPPLIER())
+					.String("type", f.getTYPE())
+					.Double("yield", f.getYIELD())
+					.Double("version", f.getVERSION())
+					.Double("moisture", getDouble(f.getMOISTURE()))
+					.getValues());
+		}
+
+		// miscs
+		// style
+		// yeasts
+		
 		// insert into database
 	}
-
+	
 	public RECIPE recipeForName(String name) {
 		for(RECIPE r:getRecipes()){
 			if (r.getNAME().equals(name)){

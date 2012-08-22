@@ -1,9 +1,12 @@
 package com.example.homebrewnavigator;
 
+import java.io.InputStream;
+
 import beerxml.RecipeRepository;
 import db.DbAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -68,7 +71,10 @@ public class MainActivity extends Activity {
 					MyContext.getDb().close();
 					
 					RecipeRepository repo = new RecipeRepository(MyContext.getDb());
-					
+					Context ctx = MyContext.getContext();
+					int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
+					InputStream contents = ctx.getResources().openRawResource(id);
+					repo.ImportRecipesFromXml(contents);
 					
 					return null;
 				}
