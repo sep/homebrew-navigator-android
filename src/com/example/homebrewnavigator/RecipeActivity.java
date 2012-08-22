@@ -26,7 +26,7 @@ public class RecipeActivity extends Activity {
 	RECIPE mRecipe;
 	
 	public RecipeActivity() {
-		mRepository = new RecipeRepository();
+		mRepository = new RecipeRepository(MyContext.getDb());
 		
 	}
 	

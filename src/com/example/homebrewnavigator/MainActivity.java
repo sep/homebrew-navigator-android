@@ -1,5 +1,6 @@
 package com.example.homebrewnavigator;
 
+import beerxml.RecipeRepository;
 import db.DbAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;

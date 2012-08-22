@@ -70,7 +70,7 @@ public class BrewDayActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mRepository = new RecipeRepository();
+		mRepository = new RecipeRepository(MyContext.getDb());
 		
 		Resources res = getResources();
 		mActivityBrewDay = (RelativeLayout) getLayoutInflater().inflate(
