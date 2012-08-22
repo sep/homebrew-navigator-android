@@ -209,8 +209,8 @@ public class RecipeManagerActivity extends Activity {
 
 				TextView ibu = (TextView) rowView.findViewById(R.id.textIBU);
 				TextView abv = (TextView) rowView.findViewById(R.id.textABV);
-				ibu.setText("IBU: " + recipe.getSTYLE().getIBU_MIN() + " - " + recipe.getSTYLE().getIBU_MAX());
-				abv.setText("ABV: " + recipe.getSTYLE().getABV_MIN() + " - " + recipe.getSTYLE().getABV_MAX());
+				ibu.setText("IBU: " + recipe.getSTYLE().getIBU_MAX() + " - " + recipe.getSTYLE().getIBU_MIN());
+				abv.setText("ABV: " + recipe.getSTYLE().getABV_MAX() + " - " + recipe.getSTYLE().getABV_MIN());
 
 				return rowView;
 			}
