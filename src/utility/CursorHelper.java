@@ -5,7 +5,7 @@ import java.util.List;
 
 import android.database.Cursor;
 
-public class CursorLoop {
+public class CursorHelper {
 	public static <T> List<T> loop(Cursor c, Selector<T, Cursor> selector) {
 		ArrayList<T> items = new ArrayList<T>();
 
@@ -18,5 +18,13 @@ public class CursorLoop {
 		} while(c.moveToNext());
 		
 		return items;
+	}
+	
+	public static <T> T first(Cursor c, Selector<T, Cursor> selector) {
+		if (c.getCount() == 0)
+			return null;
+
+		c.moveToFirst();
+		return selector.map(c);
 	}
 }

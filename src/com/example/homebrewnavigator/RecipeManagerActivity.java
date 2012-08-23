@@ -201,10 +201,8 @@ public class RecipeManagerActivity extends Activity {
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				// TODO: go make row view
 				// TODO: set details on that row view
-				View rowView = inflater.inflate(
-						R.layout.recipe_row_layout, parent, false);
-				TextView textView = (TextView) rowView
-						.findViewById(R.id.recipeName);
+				View rowView = inflater.inflate(R.layout.recipe_row_layout, parent, false);
+				TextView textView = (TextView) rowView.findViewById(R.id.recipeName);
 				textView.setText(values.get(position).Name);
 				
 				RecipeManagerViewModel recipe = values.get(position);

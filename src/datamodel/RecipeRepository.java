@@ -9,7 +9,7 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import utility.CursorLoop;
+import utility.CursorHelper;
 import utility.Selector;
 
 import android.content.Context;
@@ -71,6 +71,58 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		}
 		return null;
 	}
+
+	public class RecipeViewModel {
+		public long Id;
+		public String Name;
+		public double BatchSize;
+		public double BoilSize;
+		public String Notes;
+		public String Type; // TODO: image for type would be cool
+		
+		public List<YeastViewModel> Yeasts;
+		public List<FermentablesViewModel> Fermentables;
+		public List<IngredientsViewModel> Ingredients;
+		public List<StepsViewModel> Steps;
+	}
+	
+	public class YeastViewModel {
+	}
+	
+	public class FermentablesViewModel {
+		
+	}
+	
+	public class IngredientsViewModel {
+		
+	}
+	
+	public class StepsViewModel {
+		
+	}
+	
+	public RecipeViewModel recipeForName2(final String name) {
+		Cursor recipeIdCursor = _db.getReadableDatabase().rawQuery(
+				"select id, batch_size, boil_size, notes, type from recipes where name = ?",
+				new String[]{name});
+		
+		RecipeViewModel recipe = CursorHelper.first(recipeIdCursor, new Selector<RecipeViewModel, Cursor>(){
+			@Override
+			public RecipeViewModel map(Cursor c) {
+				RecipeViewModel r = new RecipeViewModel();
+				r.Id = c.getLong(0);
+				r.Name = name;
+				r.BatchSize = c.getDouble(1);
+				r.BoilSize = c.getDouble(2);
+				r.Notes = c.getString(3);
+				r.Type = c.getString(4);
+				return r;
+			}
+		});
+				
+
+		return recipe;
+	}
 	
 	public Recipe getDeepRecipe(String name) {
 		if (name.equals("fake")){
@@ -103,8 +155,6 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		toBrew.addStep(new TimedStep(1, "Steep grains for 15 minutes")); // TODO change back to 15/30 or recipe based
 		toBrew.addStep(new ManualRecipeStep("Add your extracts."));
 		toBrew.addStep(new TemperatureStep(90, "\u00B0F", 0, "Raise to a boil",false)); // TODO change back to 212
-		
-		// get the hops, and the moss/miscs
 		
 		List<StepPair> pairs = new ArrayList<StepPair>();
 		
@@ -172,7 +222,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	public List<String> getCategories() {
 		Cursor c = _db.getReadableDatabase().rawQuery("select distinct category from styles order by category", null);
 		
-		return CursorLoop.loop(c, new Selector<String, Cursor>(){
+		return CursorHelper.loop(c, new Selector<String, Cursor>(){
 			@Override
 			public String map(Cursor c) { return c.getString(0); }
 		});
@@ -183,7 +233,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 				"select r.name, s.ibu_min, s.ibu_max, s.abv_min, s.abv_max from recipes r join styles s on s.recipe_id = r.id where s.category = ? order by r.name",
 				new String[]{category});
 		
-		return CursorLoop.loop(c, new Selector<RecipeManagerViewModel, Cursor>(){
+		return CursorHelper.loop(c, new Selector<RecipeManagerViewModel, Cursor>(){
 			@Override
 			public RecipeManagerViewModel map(Cursor c) {
 				RecipeManagerViewModel r = new RecipeManagerViewModel();
