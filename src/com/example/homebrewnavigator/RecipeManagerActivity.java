@@ -140,7 +140,7 @@ public class RecipeManagerActivity extends Activity {
 			return newFrag;
 		}
 
-		String fagmentTitle = "truth";
+		String fragmentTitle = "truth";
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +148,7 @@ public class RecipeManagerActivity extends Activity {
 			super.onCreate(savedInstanceState);
 			if (mBundledArguments != null
 					&& mBundledArguments.containsKey("category")) {
-				fagmentTitle = mBundledArguments.getString("category");
+				fragmentTitle = mBundledArguments.getString("category");
 			}
 		}
 
@@ -160,7 +160,7 @@ public class RecipeManagerActivity extends Activity {
 //			View tv = v.findViewById(R.id.category);
 //			((TextView) tv).setText(fagmentTitle);
 
-			final List<RECIPE> recipes = mRepository.recipesForCategory(fagmentTitle);
+			final List<RECIPE> recipes = mRepository.recipesForCategory(fragmentTitle);
 			ListView lvRecipes = (ListView) v.findViewById(R.id.recipeList);
 
 			RecipeListAdapter recipeAdapter = new RecipeListAdapter(mContext,

@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		lastInstalledApplicationVersion = mSettings.getString(getString(R.string.app_version), "0.0");
+		lastInstalledApplicationVersion = mSettings.getString("app_version", "0.0");
 		if (!lastInstalledApplicationVersion.equals(currentApplicationVersion)) {
 			final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Preparing", "Upgrading application...", true);
 			new AsyncTask<Void, Void, Void>() {
@@ -72,9 +72,13 @@ public class MainActivity extends Activity {
 					
 					RecipeRepository repo = new RecipeRepository(MyContext.getDb());
 					Context ctx = MyContext.getContext();
-					int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
-					InputStream contents = ctx.getResources().openRawResource(id);
-					repo.ImportRecipesFromXml(contents);
+					if (!mSettings.getBoolean("imported_recipes", false)) {
+						int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
+						InputStream contents = ctx.getResources().openRawResource(id);
+						repo.ImportRecipesFromXml(contents);
+						mSettings.edit().putBoolean("imported_recipes", true);
+					}
+					mSettings.edit().putString("app_version", currentApplicationVersion);
 					
 					return null;
 				}

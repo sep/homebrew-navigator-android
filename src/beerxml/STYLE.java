@@ -152,11 +152,17 @@ public class STYLE {
   public double getIBU_MIN() {
     return IBU_MIN;
   }
+  public void setIBU_MIN(double value) {
+	  IBU_MIN = value;
+  }
 
   /**
    */
   public double getIBU_MAX() {
     return IBU_MAX;
+  }
+  public void setIBU_MAX(double value) {
+	  IBU_MAX = value;
   }
 
   /**
@@ -188,11 +194,17 @@ public class STYLE {
   public double getABV_MIN() {
     return ABV_MIN;
   }
+  public void setABV_MIN(double value) {
+	  ABV_MIN = value;
+  }
 
   /**
    */
   public double getABV_MAX() {
     return ABV_MAX;
+  }
+  public void setABV_MAX(double value) {
+	  ABV_MAX = value;
   }
 
   /**

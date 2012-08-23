@@ -140,6 +140,9 @@ public class RECIPE {
   public String getNAME() {
     return NAME;
   }
+  public void setName(String name) {
+	  NAME = name;
+  }
 
   /**
    */
@@ -158,6 +161,9 @@ public class RECIPE {
    */
   public STYLE getSTYLE() {
     return STYLE;
+  }
+  public void setSTYLE(STYLE value) {
+	  STYLE = value;
   }
 
   /**
