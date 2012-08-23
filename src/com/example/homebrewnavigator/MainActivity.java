@@ -2,7 +2,8 @@ package com.example.homebrewnavigator;
 
 import java.io.InputStream;
 
-import beerxml.RecipeRepository;
+import datamodel.BeerXmlImporter;
+import datamodel.RecipeRepository;
 import db.DbAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -70,12 +71,12 @@ public class MainActivity extends Activity {
 					MyContext.getDb().getReadableDatabase();
 					MyContext.getDb().close();
 					
-					RecipeRepository repo = new RecipeRepository(MyContext.getDb());
+					BeerXmlImporter importer = new BeerXmlImporter();
 					Context ctx = MyContext.getContext();
 					if (!mSettings.getBoolean("imported_recipes", false)) {
 						int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
 						InputStream contents = ctx.getResources().openRawResource(id);
-						repo.ImportRecipesFromXml(contents);
+						importer.importRecipesFromXml(contents, MyContext.getDb());
 						mSettings.edit().putBoolean("imported_recipes", true);
 					}
 					mSettings.edit().putString("app_version", currentApplicationVersion);

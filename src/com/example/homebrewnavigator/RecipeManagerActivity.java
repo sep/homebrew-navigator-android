@@ -3,6 +3,9 @@ package com.example.homebrewnavigator;
 import java.util.ArrayList;
 import java.util.List;
 
+import datamodel.RecipeManagerViewModel;
+import datamodel.RecipeRepository;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -27,7 +30,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import beerxml.RECIPE;
-import beerxml.RecipeRepository;
 
 /**
  * This demonstrates the use of action bar tabs and how they interact with other
@@ -160,7 +162,7 @@ public class RecipeManagerActivity extends Activity {
 //			View tv = v.findViewById(R.id.category);
 //			((TextView) tv).setText(fagmentTitle);
 
-			final List<RECIPE> recipes = mRepository.recipesForCategory(fragmentTitle);
+			final List<RecipeManagerViewModel> recipes = mRepository.recipesForCategory(fragmentTitle);
 			ListView lvRecipes = (ListView) v.findViewById(R.id.recipeList);
 
 			RecipeListAdapter recipeAdapter = new RecipeListAdapter(mContext,
@@ -173,7 +175,7 @@ public class RecipeManagerActivity extends Activity {
 //							.getText();
 					
 					startActivity(new Intent()
-						.putExtra("recipeName", recipes.get(position).getNAME())
+						.putExtra("recipeName", recipes.get(position).Name)
 						.setClassName(mContext, RecipeActivity.class.getName()));
 				}
 			});
@@ -182,11 +184,11 @@ public class RecipeManagerActivity extends Activity {
 			return v;
 		}
 
-		public class RecipeListAdapter extends ArrayAdapter<RECIPE> {
+		public class RecipeListAdapter extends ArrayAdapter<RecipeManagerViewModel> {
 			private final Context context;
-			private final List<RECIPE> values;
+			private final List<RecipeManagerViewModel> values;
 
-			public RecipeListAdapter(Context context, List<RECIPE> recipes) {
+			public RecipeListAdapter(Context context, List<RecipeManagerViewModel> recipes) {
 				super(context, R.layout.recipe_row_layout, recipes);
 
 				this.context = context;
@@ -203,14 +205,14 @@ public class RecipeManagerActivity extends Activity {
 						R.layout.recipe_row_layout, parent, false);
 				TextView textView = (TextView) rowView
 						.findViewById(R.id.recipeName);
-				textView.setText(values.get(position).getNAME());
+				textView.setText(values.get(position).Name);
 				
-				RECIPE recipe = values.get(position);
+				RecipeManagerViewModel recipe = values.get(position);
 
 				TextView ibu = (TextView) rowView.findViewById(R.id.textIBU);
 				TextView abv = (TextView) rowView.findViewById(R.id.textABV);
-				ibu.setText("IBU: " + recipe.getSTYLE().getIBU_MAX() + " - " + recipe.getSTYLE().getIBU_MIN());
-				abv.setText("ABV: " + recipe.getSTYLE().getABV_MAX() + " - " + recipe.getSTYLE().getABV_MIN());
+				ibu.setText("IBU: " + recipe.IbuMax + " - " + recipe.IbuMin);
+				abv.setText("ABV: " + recipe.AbvMax + " - " + recipe.AbvMin);
 
 				return rowView;
 			}

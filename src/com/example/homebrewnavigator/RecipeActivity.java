@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import datamodel.RecipeRepository;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +19,6 @@ import beerxml.FERMENTABLE;
 import beerxml.HOP;
 import beerxml.MISC;
 import beerxml.RECIPE;
-import beerxml.RecipeRepository;
 import beerxml.YEAST;
 
 public class RecipeActivity extends Activity {

@@ -26,12 +26,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import beerxml.RecipeRepository;
 
 import com.example.homebrewnavigator.bll.Batch;
 import com.example.homebrewnavigator.bll.BatchRepository;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
+
+import datamodel.RecipeRepository;
 
 public class BrewDayActivity extends Activity {
     private static final String TIME_UNITS = "minutes";
