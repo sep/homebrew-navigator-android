@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 
 		lastInstalledApplicationVersion = mSettings.getString("app_version", "0.0");
 		if (!lastInstalledApplicationVersion.equals(currentApplicationVersion)) {
-			final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Preparing", "Upgrading application...", true);
+			final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Mmm... beer", "Loading up some delicious beer recipes.", true);
 			new AsyncTask<Void, Void, Void>() {
 				@Override
 				protected Void doInBackground(Void... params) {
@@ -93,12 +93,12 @@ public class MainActivity extends Activity {
 				}
 			}.execute();
 		}
-		
+
 		if( isBrewing() ){
         	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
         }
 	}
-	
+
 
 	public Boolean isBrewing(){
         Boolean brewing = mSettings.getBoolean(getString(R.string.brewing_pref), false);

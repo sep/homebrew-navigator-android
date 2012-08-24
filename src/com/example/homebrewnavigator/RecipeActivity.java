@@ -59,8 +59,7 @@ public class RecipeActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 	}
-	
-    
+
     public void handleBrewThis(View view) {
     	startActivity(new Intent().setClass(this, BrewDayActivity.class).putExtra("recipeName", mRecipe.Name));
     }
