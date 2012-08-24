@@ -43,7 +43,7 @@ public class RecipeActivity extends Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		String recipeName = getIntent().getExtras().getString("recipeName");
-		RecipeViewModel recipe = mRepository.recipeForName2(recipeName);
+		RecipeViewModel recipe = mRepository.recipeForName(recipeName);
 
 		mRecipe = recipe;
 		

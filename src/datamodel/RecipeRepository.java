@@ -53,7 +53,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		});
 	}
 
-	public RecipeViewModel recipeForName2(final String name) {
+	public RecipeViewModel recipeForName(final String name) {
 		Cursor recipeIdCursor = _db.getReadableDatabase().rawQuery(
 				"select r.id, r.batch_size, r.boil_size, r.boil_time, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name, s.category from recipes r join styles s on r.id = s.recipe_id where r.name = ?",
 				new String[]{name});
@@ -91,7 +91,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	}
 	
 	public Recipe getDeepRecipe(String name) {
-		RecipeViewModel recipe = recipeForName2(name);
+		RecipeViewModel recipe = recipeForName(name);
 
 		Recipe toBrew = new Recipe();
 		toBrew.setName(name);
@@ -132,52 +132,6 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		return toBrew;
 	}
 
-	public class StepComparator implements Comparator<StepPair> {
-
-		@Override
-		public int compare(StepPair arg0, StepPair arg1) {
-			if (arg0 == null && arg1 == null)
-				return 0;
-			if (arg0 == null)
-				return -1;
-			if (arg1 == null)
-				return 1;
-			return (int) Math.round(arg0.mValue - arg1.mValue);
-		}
-	}
-
-	public class StepPair {
-		double mValue; 
-		String mText;
-		
-		public StepPair(String text, double value){
-			mText = text;
-			mValue = value;
-		}
-		
-		public String getText() {
-			return mText;
-		}
-		public double getValue() {
-			return mValue;
-		}
-	}
-		
-	@Override
-	public int compare(RECIPE lhs, RECIPE rhs) {
-		return lhs.getNAME().compareToIgnoreCase(rhs.getNAME());
-	}
-	
-	private class HopTime {
-		public String name;
-		public int time;
-	}
-	
-	private class MiscTime {
-		public String name;
-		public int time;
-	}
-	
 	private List<HopTime> getHopTimes(long recipeId) {
 		Cursor hc = _db.getReadableDatabase().rawQuery(
 				"select name, time from hops where recipe_id = ?",
@@ -253,7 +207,6 @@ public class RecipeRepository implements Comparator<RECIPE>{
 
 		return builder.toString();
 	}
-
 	
 	private String MakeInstruction(int cnt, String instruction) {
 		return cnt + ". " + instruction + "\n";
@@ -340,5 +293,51 @@ public class RecipeRepository implements Comparator<RECIPE>{
     		retValue += str;
     	return retValue;
     }
+
+	@Override
+	public int compare(RECIPE lhs, RECIPE rhs) {
+		return lhs.getNAME().compareToIgnoreCase(rhs.getNAME());
+	}
+	
+	public class StepComparator implements Comparator<StepPair> {
+
+		@Override
+		public int compare(StepPair arg0, StepPair arg1) {
+			if (arg0 == null && arg1 == null)
+				return 0;
+			if (arg0 == null)
+				return -1;
+			if (arg1 == null)
+				return 1;
+			return (int) Math.round(arg0.mValue - arg1.mValue);
+		}
+	}
+
+	public class StepPair {
+		double mValue; 
+		String mText;
+		
+		public StepPair(String text, double value){
+			mText = text;
+			mValue = value;
+		}
+		
+		public String getText() {
+			return mText;
+		}
+		public double getValue() {
+			return mValue;
+		}
+	}
+		
+	private class HopTime {
+		public String name;
+		public int time;
+	}
+	
+	private class MiscTime {
+		public String name;
+		public int time;
+	}
 	
 }
