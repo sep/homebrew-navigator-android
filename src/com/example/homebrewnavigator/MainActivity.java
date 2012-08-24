@@ -1,19 +1,12 @@
 package com.example.homebrewnavigator;
 
 import java.io.InputStream;
-
 import datamodel.BeerXmlImporter;
-import datamodel.RecipeRepository;
-import db.DbAdapter;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,8 +15,6 @@ import android.view.View;
 
 public class MainActivity extends Activity {
     public Boolean mBrewing = false;
-    private String currentApplicationVersion = "UNKNOWN";
-    private String lastInstalledApplicationVersion = "UNKNOWN";
     private SharedPreferences mSettings;
     
     @Override
@@ -32,16 +23,6 @@ public class MainActivity extends Activity {
         
         setContentView(R.layout.activity_main);
         getActionBar().setTitle("HomeBrew Navigator");
-        
-        try{
-        	currentApplicationVersion = this
-        			.getPackageManager()
-        			.getPackageInfo(this.getPackageName(),  0)
-        			.versionName;
-        }
-        catch (NameNotFoundException e) {
-        	Log.w("MAIN", "Could not lookup current application version", e);
-        }
         
         mSettings = getSharedPreferences(getString(R.string.prefs_name), 0);
     }
@@ -58,47 +39,30 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
+    private String getCurrentVersion() {
+        try{
+        	return this
+        			.getPackageManager()
+        			.getPackageInfo(this.getPackageName(),  0)
+        			.versionName;
+        }
+        catch (NameNotFoundException e) {
+        	Log.w("MAIN", "Could not lookup current application version", e);
+        	return "UNKNOWN";
+        }
+    }
+
+    
+    @Override
 	protected void onResume() {
 		super.onResume();
 
-		lastInstalledApplicationVersion = mSettings.getString("app_version", "0.0");
-		if (!lastInstalledApplicationVersion.equals(currentApplicationVersion)) {
-			final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Mmm... beer", "Loading up some delicious beer recipes.", true);
-			new AsyncTask<Void, Void, Void>() {
-				@Override
-				protected Void doInBackground(Void... params) {
-					MyContext.getDb().getReadableDatabase();
-					MyContext.getDb().close();
-					
-					BeerXmlImporter importer = new BeerXmlImporter();
-					Context ctx = MyContext.getContext();
-					if (!mSettings.getBoolean("imported_recipes", false)) {
-						int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
-						InputStream contents = ctx.getResources().openRawResource(id);
-						importer.importRecipesFromXml(contents, MyContext.getDb());
-						mSettings.edit().putBoolean("imported_recipes", true);
-					}
-					mSettings.edit().putString("app_version", currentApplicationVersion);
-					
-					return null;
-				}
-				
-				@Override
-				protected void onPostExecute(Void result) {
-					SharedPreferences.Editor editor = mSettings.edit();
-					editor.putString("app_version", currentApplicationVersion);
-					editor.commit();
-					progressDialog.dismiss();
-				}
-			}.execute();
-		}
-
+		processUpgrade();
+		
 		if( isBrewing() ){
         	startActivity(new Intent().setClassName(getApplicationContext(), BrewDayActivity.class.getName()));
         }
 	}
-
 
 	public Boolean isBrewing(){
         Boolean brewing = mSettings.getBoolean(getString(R.string.brewing_pref), false);
@@ -116,4 +80,45 @@ public class MainActivity extends Activity {
     public void thermoHandler(View v) {
     	startActivity(new Intent().setClassName(getApplicationContext(), JournalActivity.class.getName()));
     }
+    
+	private void processUpgrade() {
+		final String currentVersion = getCurrentVersion();
+		
+		new UpgradeHelper(this).Go(
+				currentVersion,
+				mSettings.getString("app_version", "0.0"),
+				"Mmm... beer",
+				"Loading up some delicious beer recipes.",
+				// force database upgrade
+				new Runnable(){
+					@Override
+					public void run() {
+						MyContext.getDb().getReadableDatabase();
+						MyContext.getDb().close();
+					}
+				},
+				// import beer xml
+				new Runnable(){
+					@Override
+					public void run() {
+						BeerXmlImporter importer = new BeerXmlImporter();
+						Context ctx = MyContext.getContext();
+						if (!mSettings.getBoolean("imported_recipes", false)) {
+							int id = ctx.getResources().getIdentifier("recipes", "raw", ctx.getPackageName());
+							InputStream contents = ctx.getResources().openRawResource(id);
+							importer.importRecipesFromXml(contents, MyContext.getDb());
+							mSettings.edit().putBoolean("imported_recipes", true);
+						}
+					}
+				},
+				// update app version in prefs
+				new Runnable(){
+					@Override
+					public void run() {
+						SharedPreferences.Editor editor = mSettings.edit();
+						editor.putString("app_version", currentVersion);
+						editor.commit();
+					}
+				});
+	}
 }
