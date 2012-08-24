@@ -1,26 +1,17 @@
 package datamodel;
 
-import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import utility.CursorHelper;
 import utility.Selector;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
-import beerxml.HOP;
-import beerxml.MISC;
 import beerxml.RECIPE;
-import beerxml.RECIPES;
-import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.bll.ManualRecipeStep;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.TemperatureStep;
@@ -33,39 +24,6 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	public RecipeRepository(SQLiteOpenHelper db) {
 		_db = db;
 	}
-	
-	private static List<RECIPE> mRecipes;
-	private List<RECIPE> getRecipes() {
-		if (mRecipes == null)
-		{
-			try{
-				Context ctx = MyContext.getContext();
-				int id = ctx.getResources().getIdentifier("recipes", "raw",
-						ctx.getPackageName());
-				
-				InputStream contents = ctx.getResources().openRawResource(id);
-				Serializer serializer = new Persister();
-				mRecipes = serializer.read(RECIPES.class, contents).gettheRecipes();
-				contents.close();
-
-				Collections.sort(mRecipes, this);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		return mRecipes;
-	}
-	
-	
-	public RECIPE recipeForName(String name) {
-		for(RECIPE r:getRecipes()){
-			if (r.getNAME().equals(name)){
-				return r;
-			}
-		}
-		return null;
-	}
-
 	
 	public List<String> getCategories() {
 		Cursor c = _db.getReadableDatabase().rawQuery("select distinct category from styles order by category", null);
@@ -97,7 +55,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 
 	public RecipeViewModel recipeForName2(final String name) {
 		Cursor recipeIdCursor = _db.getReadableDatabase().rawQuery(
-				"select r.id, r.batch_size, r.boil_size, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name, s.category from recipes r join styles s on r.id = s.recipe_id where r.name = ?",
+				"select r.id, r.batch_size, r.boil_size, r.boil_time, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name, s.category from recipes r join styles s on r.id = s.recipe_id where r.name = ?",
 				new String[]{name});
 		
 		RecipeViewModel recipe = CursorHelper.first(recipeIdCursor, new Selector<RecipeViewModel, Cursor>(){
@@ -109,6 +67,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 				r.Name = name;
 				r.BatchSize = c.getDouble(i++);
 				r.BoilSize = c.getDouble(i++);
+				r.BoilTime = c.getInt(i++);
 				r.Notes = c.getString(i++);
 				r.Type = c.getString(i++);
 				r.OgMax = c.getDouble(i++);
@@ -132,7 +91,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	}
 	
 	public Recipe getDeepRecipe(String name) {
-		RECIPE theRecipe = recipeForName(name);
+		RecipeViewModel recipe = recipeForName2(name);
 
 		Recipe toBrew = new Recipe();
 		toBrew.setName(name);
@@ -144,14 +103,13 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		
 		List<StepPair> pairs = new ArrayList<StepPair>();
 		
-		toBrew.addStep(new TimedStep((int) theRecipe.getBOIL_TIME(), "Boil for 60 minutes", true));
+		toBrew.addStep(new TimedStep(recipe.BoilTime, "Boil for " + recipe.BoilTime  + " minutes", true));
 		
-		for(HOP h:theRecipe.getHOPS().gettheHops()) {
-			pairs.add(new StepPair("Add " + h.getNAME() + " hops", 60-h.getTIME()));
+		for(HopTime h : getHopTimes(recipe.Id)) {
+			pairs.add(new StepPair("Add " + h.name + " hops", 60-h.time));
 		}	
-		if (theRecipe.getMISCS().gettheMiscs() != null) {
-			for(MISC m:theRecipe.getMISCS().gettheMiscs())
-				pairs.add(new StepPair("Add " + m.getNAME(), m.getTIME()));
+		for(MiscTime m: getMiscTimes(recipe.Id)) {
+			pairs.add(new StepPair("Add " + m.name, m.time));
 		}
 		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
 
@@ -168,7 +126,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 			boil += time;
 		}
 		
-		toBrew.addStep(new TemperatureStep(80, "\u00B0F", 212, "Chill Wort", true));
+		toBrew.addStep(new TemperatureStep(70, "\u00B0F", 212, "Chill Wort", true));
 		toBrew.addStep(new ManualRecipeStep("Add Yeast"));
 		toBrew.addStep(new ManualRecipeStep("Move to Fermenter"));
 		return toBrew;

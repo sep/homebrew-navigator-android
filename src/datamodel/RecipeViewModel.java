@@ -5,6 +5,7 @@ public class RecipeViewModel {
 	public String Name;
 	public double BatchSize;
 	public double BoilSize;
+	public int BoilTime;
 	public String Notes;
 	public String Type; // TODO: image for type would be cool
 	public String Ingredients;
