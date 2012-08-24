@@ -1,12 +1,12 @@
 package com.example.homebrewnavigator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import datamodel.RecipeRepository;
+import datamodel.RecipeViewModel;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -15,16 +15,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import beerxml.FERMENTABLE;
 import beerxml.HOP;
 import beerxml.MISC;
 import beerxml.RECIPE;
-import beerxml.YEAST;
 
 public class RecipeActivity extends Activity {
 
 	RecipeRepository mRepository;
-	RECIPE mRecipe;
+	RecipeViewModel mRecipe;
 	
 	public RecipeActivity() {
 		mRepository = new RecipeRepository(MyContext.getDb());
@@ -53,34 +51,26 @@ public class RecipeActivity extends Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		String recipeName = getIntent().getExtras().getString("recipeName");
-		RECIPE recipe = mRepository.recipeForName(recipeName);
+		RecipeViewModel recipe = mRepository.recipeForName2(recipeName);
 
 		mRecipe = recipe;
 		
 		bar.setTitle(recipeName);
 		
-		
 		setContentView(R.layout.activity_recipe);
-		// TODO Auto-generated method stub
 		
+		((TextView)findViewById(R.id.ingredients)).setText(recipe.Ingredients);
+		((TextView)findViewById(R.id.instructions)).setText(recipe.Instructions);
 		
-		String ingredients = getIngredientsText(recipe);
-		((TextView)findViewById(R.id.ingredients)).setText(ingredients);
-
-		String instructions = getInstructionsText(recipe);
-		((TextView)findViewById(R.id.instructions)).setText(instructions);
-		
-		
-		((TextView)findViewById(R.id.originalGravity)).setText("Original Gravity: " + recipe.getSTYLE().getOG_MIN() + " - " + recipe.getSTYLE().getOG_MAX());
-		((TextView)findViewById(R.id.finalGravity)).setText("Final Gravity: " + recipe.getSTYLE().getFG_MIN() + " - " + recipe.getSTYLE().getFG_MAX());
-		
+		((TextView)findViewById(R.id.originalGravity)).setText("Original Gravity: " + recipe.OgMax + " - " + recipe.OgMin);
+		((TextView)findViewById(R.id.finalGravity)).setText("Final Gravity: " + recipe.FgMax + " - " + recipe.FgMin);
 		
 		super.onCreate(savedInstanceState);
 	}
 	
     
     public void handleBrewThis(View view) {
-    	startActivity(new Intent().setClass(this, BrewDayActivity.class).putExtra("recipeName", mRecipe.getNAME()));
+    	startActivity(new Intent().setClass(this, BrewDayActivity.class).putExtra("recipeName", mRecipe.Name));
     }
 
 	String getInstructionsText(RECIPE recipe) {

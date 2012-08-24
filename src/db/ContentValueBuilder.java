@@ -18,7 +18,7 @@ public class ContentValueBuilder {
 		return this;
 	}
 	
-	public ContentValueBuilder Double(String name, Double value) {
+	public ContentValueBuilder Double(String name, double value) {
 		_contentValues.put(name, value);
 		return this;
 	}

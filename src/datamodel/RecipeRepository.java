@@ -15,23 +15,16 @@ import utility.Selector;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import beerxml.FERMENTABLE;
 import beerxml.HOP;
 import beerxml.MISC;
 import beerxml.RECIPE;
 import beerxml.RECIPES;
-import beerxml.STYLE;
-import beerxml.YEAST;
-
 import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.bll.ManualRecipeStep;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.TemperatureStep;
 import com.example.homebrewnavigator.bll.TimedStep;
-
-import db.ContentValueBuilder;
 
 public class RecipeRepository implements Comparator<RECIPE>{
 
@@ -104,7 +97,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 
 	public RecipeViewModel recipeForName2(final String name) {
 		Cursor recipeIdCursor = _db.getReadableDatabase().rawQuery(
-				"select r.id, r.batch_size, r.boil_size, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name from recipes r join styles s on r.id = s.recipe_id where name = ?",
+				"select r.id, r.batch_size, r.boil_size, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name, s.category from recipes r join styles s on r.id = s.recipe_id where r.name = ?",
 				new String[]{name});
 		
 		RecipeViewModel recipe = CursorHelper.first(recipeIdCursor, new Selector<RecipeViewModel, Cursor>(){
@@ -250,24 +243,44 @@ public class RecipeRepository implements Comparator<RECIPE>{
 			}
 		});
 
-		// TODO
-//		if (recipeId.getMISCS().gettheMiscs() != null) {
-//			for(MISC m:recipeId.getMISCS().gettheMiscs()){
-//				Boolean isWeight = m.getAMOUNT_IS_WEIGHT().equals("TRUE");
-//				String qty = round(m.getAMOUNT() * (isWeight ? 2.20462 : 33.814), 2) + "";
-//				String unit = isWeight ? "lbs" : "oz";
-//				String time = (m.getTIME() == 0)  ? "" : " at " + m.getTIME(); // TODO: what if the value actually is zero?
-//				
-//				ingredients += qty + " " + unit + " " + m.getNAME() + time + "\n";
-//			}
-//		}
-//		
-//		ingredients += "\n";
-//		
-//		for(YEAST y:recipeId.getYEASTS().gettheYeasts()) {
-//			ingredients += "Yeast: " + y.getNAME() + " " + y.getPRODUCT_ID() + "\n";
-//		}
+		Cursor mc = _db.getReadableDatabase().rawQuery(
+				"select name, amount, amount_is_weight, time from miscs where recipe_id = ?",
+				new String[]{Long.toString(recipeId)});
+
+		CursorHelper.loop(mc, new Selector<Void, Cursor>() {
+			@Override
+			public Void map(Cursor c) {
+				int i = 0;
+				String name = c.getString(i++);
+				double amount = c.getDouble(i++);
+				boolean isWeight = c.getInt(i++) == 1;
+				int time = c.getInt(i++);
+				String timeStr = (time == 0)  ? "" : " at " + time; // TODO: what if the value actually is zero?
+
+				String qty = round(amount * (isWeight ? 2.20462 : 33.814), 2) + "";
+				String unit = isWeight ? "lbs" : "oz";
+				
+				builder.append(qty + " " + unit + " " + name + timeStr + "\n");
+
+				return null;
+			}
+		});
 		
+		builder.append("\n");
+
+		Cursor yc = _db.getReadableDatabase().rawQuery(
+				"select name, product_id from yeasts where recipe_id = ?",
+				new String[]{Long.toString(recipeId)});
+
+		CursorHelper.loop(yc, new Selector<Void, Cursor>() {
+			@Override
+			public Void map(Cursor c) {
+				int i=0;
+				builder.append("Yeast: " + c.getString(i++) + " " + c.getString(i++) + "\n");
+				return null;
+			}
+		});
+
 		return builder.toString();
 	}
 	
