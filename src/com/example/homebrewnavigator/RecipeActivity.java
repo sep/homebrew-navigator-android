@@ -78,47 +78,6 @@ public class RecipeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 	}
 	
-	String getIngredientsText(RECIPE recipe) {
-
-		String ingredients = "";
-		for(HOP h:recipe.getHOPS().gettheHops()) {
-			ingredients += (round(h.getAMOUNT()*35.274, 2)) + "oz. " + h.getNAME() + " at " + Math.round(h.getTIME()) + "\n";
-		}
-		
-		for(FERMENTABLE f:recipe.getFERMENTABLES().gettheFermentables())
-			ingredients += round(f.getAMOUNT()*2.20462, 2) + "lbs " + f.getNAME() + "\n"; 
-		
-		if (recipe.getMISCS().gettheMiscs() != null) {
-			for(MISC m:recipe.getMISCS().gettheMiscs()){
-				Boolean isWeight = m.getAMOUNT_IS_WEIGHT().equals("TRUE");
-				String qty = round(m.getAMOUNT() * (isWeight ? 2.20462 : 33.814), 2) + "";
-				String unit = isWeight ? "lbs" : "oz";
-				String time = (m.getTIME() == 0)  ? "" : " at " + m.getTIME(); // TODO: what if the value actually is zero?
-				
-				ingredients += qty + " " + unit + " " + m.getNAME() + time + "\n";
-			}
-		}
-		
-		ingredients += "\n";
-		
-		for(YEAST y:recipe.getYEASTS().gettheYeasts()) {
-			ingredients += "Yeast: " + y.getNAME() + " " + y.getPRODUCT_ID() + "\n";
-		}
-		
-		return ingredients;
-	}
-	
-	String round(double d, int numDecimals) {
-        DecimalFormat twoDForm = new DecimalFormat("#." + makeString("#", numDecimals));
-        return twoDForm.format(d);
-	}
-        
-    String makeString(String str, int num) {
-    	String retValue = "";
-    	for(int i=0; i<num; i++)
-    		retValue += str;
-    	return retValue;
-    }
     
     public void handleBrewThis(View view) {
     	startActivity(new Intent().setClass(this, BrewDayActivity.class).putExtra("recipeName", mRecipe.getNAME()));
