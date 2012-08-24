@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import utility.CursorHelper;
+import utility.DbHelper;
 import utility.Selector;
 
 import android.database.Cursor;
@@ -26,63 +26,63 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	}
 	
 	public List<String> getCategories() {
-		Cursor c = _db.getReadableDatabase().rawQuery("select distinct category from styles order by category", null);
-		
-		return CursorHelper.loop(c, new Selector<String, Cursor>(){
-			@Override
-			public String map(Cursor c) { return c.getString(0); }
-		});
+		return DbHelper.query(_db.getReadableDatabase(),
+				"select distinct category from styles order by category",
+				null,
+				new Selector<String, Cursor>(){
+					@Override
+					public String map(Cursor c) { return c.getString(0); }
+				});
 	}
 
 	public List<RecipeManagerViewModel> recipesForCategory(String category) {
-		Cursor c = _db.getReadableDatabase().rawQuery(
+		return DbHelper.query(_db.getReadableDatabase(),
 				"select r.name, s.ibu_min, s.ibu_max, s.abv_min, s.abv_max from recipes r join styles s on s.recipe_id = r.id where s.category = ? order by r.name",
-				new String[]{category});
-		
-		return CursorHelper.loop(c, new Selector<RecipeManagerViewModel, Cursor>(){
-			@Override
-			public RecipeManagerViewModel map(Cursor c) {
-				RecipeManagerViewModel r = new RecipeManagerViewModel();
-				r.Name = c.getString(0);
-				r.IbuMin = c.getDouble(1);
-				r.IbuMax = c.getDouble(2);
-				r.AbvMin = c.getDouble(3);
-				r.AbvMax = c.getDouble(4);
-				return r;
-			}
+				new String[]{category},
+				new Selector<RecipeManagerViewModel, Cursor>(){
+					@Override
+					public RecipeManagerViewModel map(Cursor c) {
+						RecipeManagerViewModel r = new RecipeManagerViewModel();
+						int i = 0;
+						r.Name = c.getString(i++);
+						r.IbuMin = c.getDouble(i++);
+						r.IbuMax = c.getDouble(i++);
+						r.AbvMin = c.getDouble(i++);
+						r.AbvMax = c.getDouble(i++);
+						return r;
+					}
 		});
 	}
 
 	public RecipeViewModel recipeForName(final String name) {
-		Cursor recipeIdCursor = _db.getReadableDatabase().rawQuery(
+		RecipeViewModel recipe = DbHelper.one(_db.getReadableDatabase(),
 				"select r.id, r.batch_size, r.boil_size, r.boil_time, r.notes, r.type, s.og_max, s.og_min, s.fg_max, s.fg_min, s.ibu_max, s.ibu_min, s.abv_max, s.abv_min, s.name, s.category from recipes r join styles s on r.id = s.recipe_id where r.name = ?",
-				new String[]{name});
-		
-		RecipeViewModel recipe = CursorHelper.first(recipeIdCursor, new Selector<RecipeViewModel, Cursor>(){
-			@Override
-			public RecipeViewModel map(Cursor c) {
-				RecipeViewModel r = new RecipeViewModel();
-				int i = 0;
-				r.Id = c.getLong(i++);
-				r.Name = name;
-				r.BatchSize = c.getDouble(i++);
-				r.BoilSize = c.getDouble(i++);
-				r.BoilTime = c.getInt(i++);
-				r.Notes = c.getString(i++);
-				r.Type = c.getString(i++);
-				r.OgMax = c.getDouble(i++);
-				r.OgMin = c.getDouble(i++);
-				r.FgMax = c.getDouble(i++);
-				r.FgMin = c.getDouble(i++);
-				r.IbuMax = c.getDouble(i++);
-				r.IbuMin = c.getDouble(i++);
-				r.AbvMax = c.getDouble(i++);
-				r.AbvMin = c.getDouble(i++);
-				r.StyleName = c.getString(i++);
-				r.Category = c.getString(i++);
-				return r;
-			}
-		});
+				new String[]{name},
+				new Selector<RecipeViewModel, Cursor>(){
+					@Override
+					public RecipeViewModel map(Cursor c) {
+						RecipeViewModel r = new RecipeViewModel();
+						int i = 0;
+						r.Id = c.getLong(i++);
+						r.Name = name;
+						r.BatchSize = c.getDouble(i++);
+						r.BoilSize = c.getDouble(i++);
+						r.BoilTime = c.getInt(i++);
+						r.Notes = c.getString(i++);
+						r.Type = c.getString(i++);
+						r.OgMax = c.getDouble(i++);
+						r.OgMin = c.getDouble(i++);
+						r.FgMax = c.getDouble(i++);
+						r.FgMin = c.getDouble(i++);
+						r.IbuMax = c.getDouble(i++);
+						r.IbuMin = c.getDouble(i++);
+						r.AbvMax = c.getDouble(i++);
+						r.AbvMin = c.getDouble(i++);
+						r.StyleName = c.getString(i++);
+						r.Category = c.getString(i++);
+						return r;
+					}
+				});
 		
 		recipe.Ingredients = getIngredientsText(recipe.Id);
 		recipe.Instructions = getInstructionsText(recipe.Id);
@@ -133,37 +133,35 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	}
 
 	private List<HopTime> getHopTimes(long recipeId) {
-		Cursor hc = _db.getReadableDatabase().rawQuery(
+		return DbHelper.query(_db.getReadableDatabase(),
 				"select name, time from hops where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
-
-		return CursorHelper.loop(hc, new Selector<HopTime, Cursor>() {
-			@Override
-			public HopTime map(Cursor c) {
-				int i = 0;
-				HopTime hop = new HopTime();
-				hop.name = c.getString(i++);
-				hop.time = c.getInt(i++);
-				return hop;
-			}
-		});
+				new String[]{Long.toString(recipeId)},
+				new Selector<HopTime, Cursor>() {
+					@Override
+					public HopTime map(Cursor c) {
+						int i = 0;
+						HopTime hop = new HopTime();
+						hop.name = c.getString(i++);
+						hop.time = c.getInt(i++);
+						return hop;
+					}
+				});
 	}
-	
-	private List<MiscTime> getMiscTimes(long recipeId) {
-		Cursor hc = _db.getReadableDatabase().rawQuery(
-				"select name, time from miscs where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
 
-		return CursorHelper.loop(hc, new Selector<MiscTime, Cursor>() {
-			@Override
-			public MiscTime map(Cursor c) {
-				int i = 0;
-				MiscTime misc = new MiscTime();
-				misc.name = c.getString(i++);
-				misc.time = Math.round(c.getInt(i++));
-				return misc;
-			}
-		});
+	private List<MiscTime> getMiscTimes(long recipeId) {
+		return DbHelper.query(_db.getReadableDatabase(),
+				"select name, time from miscs where recipe_id = ?",
+				new String[]{Long.toString(recipeId)},
+				new Selector<MiscTime, Cursor>() {
+					@Override
+					public MiscTime map(Cursor c) {
+						int i = 0;
+						MiscTime misc = new MiscTime();
+						misc.name = c.getString(i++);
+						misc.time = Math.round(c.getInt(i++));
+						return misc;
+					}
+				});
 	}
 	
 	private String getInstructionsText(long recipeId) {
@@ -215,69 +213,64 @@ public class RecipeRepository implements Comparator<RECIPE>{
 	private String getIngredientsText(long recipeId) {
 		final StringBuilder builder = new StringBuilder();
 
-		Cursor hc = _db.getReadableDatabase().rawQuery(
+		DbHelper.query(_db.getReadableDatabase(),
 				"select amount, name, time from hops where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
+				new String[]{Long.toString(recipeId)},
+				new Selector<Void, Cursor>() {
+					@Override
+					public Void map(Cursor c) {
+						int i = 0;
+						builder.append((round(c.getDouble(i++)*35.274, 2)) + "oz. " + c.getString(i++) + " at " + Math.round(c.getInt(i++)) + "\n");
+						return null;
+					}
+				});
 
-		CursorHelper.loop(hc, new Selector<Void, Cursor>() {
-			@Override
-			public Void map(Cursor c) {
-				int i = 0;
-				builder.append((round(c.getDouble(i++)*35.274, 2)) + "oz. " + c.getString(i++) + " at " + Math.round(c.getInt(i++)) + "\n");
-				return null;
-			}
-		});
-
-		Cursor fc = _db.getReadableDatabase().rawQuery(
+		DbHelper.query(_db.getReadableDatabase(),
 				"select amount, name from fermentables where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
+				new String[]{Long.toString(recipeId)},
+				new Selector<Void, Cursor>() {
+					@Override
+					public Void map(Cursor c) {
+						int i = 0;
+						builder.append(round(c.getDouble(i++)*2.20462, 2) + "lbs " + c.getString(i++) + "\n");
+						return null;
+					}
+				});
 
-		CursorHelper.loop(fc, new Selector<Void, Cursor>() {
-			@Override
-			public Void map(Cursor c) {
-				int i = 0;
-				builder.append(round(c.getDouble(i++)*2.20462, 2) + "lbs " + c.getString(i++) + "\n");
-				return null;
-			}
-		});
-
-		Cursor mc = _db.getReadableDatabase().rawQuery(
+		DbHelper.query(_db.getReadableDatabase(),
 				"select name, amount, amount_is_weight, time from miscs where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
-
-		CursorHelper.loop(mc, new Selector<Void, Cursor>() {
-			@Override
-			public Void map(Cursor c) {
-				int i = 0;
-				String name = c.getString(i++);
-				double amount = c.getDouble(i++);
-				boolean isWeight = c.getInt(i++) == 1;
-				int time = c.getInt(i++);
-				String timeStr = (time == 0)  ? "" : " at " + time; // TODO: what if the value actually is zero?
-
-				String qty = round(amount * (isWeight ? 2.20462 : 33.814), 2) + "";
-				String unit = isWeight ? "lbs" : "oz";
-				
-				builder.append(qty + " " + unit + " " + name + timeStr + "\n");
-
-				return null;
-			}
-		});
+				new String[]{Long.toString(recipeId)},
+				new Selector<Void, Cursor>() {
+					@Override
+					public Void map(Cursor c) {
+						int i = 0;
+						String name = c.getString(i++);
+						double amount = c.getDouble(i++);
+						boolean isWeight = c.getInt(i++) == 1;
+						int time = c.getInt(i++);
+						String timeStr = (time == 0)  ? "" : " at " + time; // TODO: what if the value actually is zero?
+		
+						String qty = round(amount * (isWeight ? 2.20462 : 33.814), 2) + "";
+						String unit = isWeight ? "lbs" : "oz";
+						
+						builder.append(qty + " " + unit + " " + name + timeStr + "\n");
+						return null;
+					}
+				});
 		
 		builder.append("\n");
 
-		Cursor yc = _db.getReadableDatabase().rawQuery(
+		DbHelper.query(_db.getReadableDatabase(),
 				"select name, product_id from yeasts where recipe_id = ?",
-				new String[]{Long.toString(recipeId)});
-
-		CursorHelper.loop(yc, new Selector<Void, Cursor>() {
-			@Override
-			public Void map(Cursor c) {
-				int i=0;
-				builder.append("Yeast: " + c.getString(i++) + " " + c.getString(i++) + "\n");
-				return null;
-			}
-		});
+				new String[]{Long.toString(recipeId)},
+				new Selector<Void, Cursor>() {
+					@Override
+					public Void map(Cursor c) {
+						int i=0;
+						builder.append("Yeast: " + c.getString(i++) + " " + c.getString(i++) + "\n");
+						return null;
+					}
+				});
 
 		return builder.toString();
 	}
