@@ -1,10 +1,5 @@
 package com.example.homebrewnavigator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import datamodel.RecipeRepository;
 import datamodel.RecipeViewModel;
 
@@ -15,9 +10,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import beerxml.HOP;
-import beerxml.MISC;
-import beerxml.RECIPE;
 
 public class RecipeActivity extends Activity {
 
@@ -72,101 +64,4 @@ public class RecipeActivity extends Activity {
     public void handleBrewThis(View view) {
     	startActivity(new Intent().setClass(this, BrewDayActivity.class).putExtra("recipeName", mRecipe.Name));
     }
-
-	String getInstructionsText(RECIPE recipe) {
-		String instructions = "";
-		
-		int cnt = 0;
-		
-		instructions += MakeInstruction(++cnt, "(Optional) rehyrdate irish moss in 1/2c water.");
-		instructions += MakeInstruction(++cnt, "Heat your water to 150 (F).");
-		instructions += MakeInstruction(++cnt, "Place specialty grains in pot.");
-		instructions += MakeInstruction(++cnt, "Steep for 30 minutes");
-		instructions += MakeInstruction(++cnt, "Boil"); // set flag
-		instructions += MakeInstruction(++cnt, "Add Extract");
-		instructions += MakeInstruction(++cnt, "Bring to boil 212 (F)");
-//		instructions += MakeInstruction(++cnt, "<add hops in order>");
-		
-		//add hops
-		List<StepPair> pairs = new ArrayList<StepPair>();
-		
-//		toBrew.addStep(new TimedStep(60, "Boil for 60 minutes", true));
-		
-		for(HOP h:recipe.getHOPS().gettheHops()) {
-			pairs.add(new StepPair("Add " + h.getNAME() + " hops", 60-h.getTIME()));
-		}	
-		if (recipe.getMISCS().gettheMiscs() != null) {
-			for(MISC m:recipe.getMISCS().gettheMiscs())
-				pairs.add(new StepPair("Add " + m.getNAME(), m.getTIME()));
-		}
-		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
-
-		Collections.sort(pairs, new StepComparator());
-
-		int boil = 0;
-		for(StepPair p:pairs) {
-			double time = p.getValue() - boil;
-			
-//			toBrew.addStep(new ManualRecipeStep(p.getText()));
-			instructions += MakeInstruction(++cnt, p.getText());
-			boil += time;
-		}
-		
-		instructions += MakeInstruction(++cnt, "(Optional) add moss at XX min");
-		instructions += MakeInstruction(++cnt, "(Optional) add wort chiller at 50 min.");
-		instructions += MakeInstruction(++cnt, "chill wort 70 (F)"); //set flag
-		instructions += MakeInstruction(++cnt, "transfer");
-		instructions += MakeInstruction(++cnt, "pitch yeast");
-		
-		// if you have moss, you should rehydrate it now in 1/2 cup water
-		// heat your water to 150
-		// place your grain in der pot
-		// steep for 30 minutes
-		// bring to boil (temp)
-		// add extract
-		// add hops, in order
-		// add moss at right time
-		// add wort chiller (if youre doing that)
-		// chill to temp (70)
-		// transfer
-		// pitch yeast
-
-		return instructions;
-	}
-	
-	String MakeInstruction(int cnt, String instruction) {
-		return cnt + ". " + instruction + "\n";
-	}
-	
-	public class StepPair {
-		double mValue; 
-		String mText;
-		
-		public StepPair(String text, double value){
-			mText = text;
-			mValue = value;
-		}
-		
-		public String getText() {
-			return mText;
-		}
-		public double getValue() {
-			return mValue;
-		}
-	}
-	
-	public class StepComparator implements Comparator<StepPair> {
-
-		@Override
-		public int compare(StepPair arg0, StepPair arg1) {
-			if (arg0 == null && arg1 == null)
-				return 0;
-			if (arg0 == null)
-				return -1;
-			if (arg1 == null)
-				return 1;
-			return (int) Math.round(arg0.mValue - arg1.mValue);
-		}
-	}
-
 }

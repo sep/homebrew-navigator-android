@@ -210,10 +210,97 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		return lhs.getNAME().compareToIgnoreCase(rhs.getNAME());
 	}
 	
-	private String getInstructionsText(long id) {
-		return "instructions here!!"; // TODO
+	private class HopTime {
+		public String name;
+		public int time;
+	}
+	
+	private class MiscTime {
+		public String name;
+		public int time;
+	}
+	
+	private List<HopTime> getHopTimes(long recipeId) {
+		Cursor hc = _db.getReadableDatabase().rawQuery(
+				"select name, time from hops where recipe_id = ?",
+				new String[]{Long.toString(recipeId)});
+
+		return CursorHelper.loop(hc, new Selector<HopTime, Cursor>() {
+			@Override
+			public HopTime map(Cursor c) {
+				int i = 0;
+				HopTime hop = new HopTime();
+				hop.name = c.getString(i++);
+				hop.time = c.getInt(i++);
+				return hop;
+			}
+		});
+	}
+	
+	private List<MiscTime> getMiscTimes(long recipeId) {
+		Cursor hc = _db.getReadableDatabase().rawQuery(
+				"select name, time from miscs where recipe_id = ?",
+				new String[]{Long.toString(recipeId)});
+
+		return CursorHelper.loop(hc, new Selector<MiscTime, Cursor>() {
+			@Override
+			public MiscTime map(Cursor c) {
+				int i = 0;
+				MiscTime misc = new MiscTime();
+				misc.name = c.getString(i++);
+				misc.time = Math.round(c.getInt(i++));
+				return misc;
+			}
+		});
+	}
+	
+	private String getInstructionsText(long recipeId) {
+		StringBuilder builder = new StringBuilder();
+		int cnt = 0;
+
+		builder.append(MakeInstruction(++cnt, "(Optional) rehyrdate irish moss in 1/2c water."));
+		builder.append(MakeInstruction(++cnt, "Heat your water to 150 (F)."));
+		builder.append(MakeInstruction(++cnt, "Place specialty grains in pot."));
+		builder.append(MakeInstruction(++cnt, "Steep for 30 minutes"));
+		builder.append(MakeInstruction(++cnt, "Boil")); // set flag
+		builder.append(MakeInstruction(++cnt, "Add Extract"));
+		builder.append(MakeInstruction(++cnt, "Bring to boil 212 (F)"));
+
+		List<StepPair> pairs = new ArrayList<StepPair>();
+
+		for(HopTime h : getHopTimes(recipeId)) {
+			pairs.add(new StepPair("Add " + h.name + " hops", 60-h.time));
+		}
+
+		for(MiscTime m : getMiscTimes(recipeId)) {
+			pairs.add(new StepPair("Add " + m.name, m.time));
+		}
+		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
+
+		Collections.sort(pairs, new StepComparator());
+
+		int boil = 0;
+		for(StepPair p:pairs) {
+			double time = p.getValue() - boil;
+
+			builder.append(MakeInstruction(++cnt, p.getText()));
+			boil += time;
+		}
+
+		builder.append(MakeInstruction(++cnt, "(Optional) add moss at XX min"));
+		builder.append(MakeInstruction(++cnt, "(Optional) add wort chiller at 50 min."));
+		builder.append(MakeInstruction(++cnt, "chill wort 70 (F)")); //set flag
+		builder.append(MakeInstruction(++cnt, "transfer"));
+		builder.append(MakeInstruction(++cnt, "pitch yeast"));
+
+		return builder.toString();
 	}
 
+	
+	private String MakeInstruction(int cnt, String instruction) {
+		return cnt + ". " + instruction + "\n";
+	}
+	
 	private String getIngredientsText(long recipeId) {
 		final StringBuilder builder = new StringBuilder();
 
