@@ -109,7 +109,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 			pairs.add(new StepPair("Add " + h.name + " hops", recipe.BoilTime - h.time));
 		}	
 		for(MiscTime m: getMiscTimes(recipe.Id)) {
-			pairs.add(new StepPair("Add " + m.name, m.time));
+			pairs.add(new StepPair("Add " + m.name, recipe.BoilTime - m.time));
 		}
 		pairs.add(new StepPair("(Optional) Place wort chiller in wort", recipe.BoilTime - 10));
 
