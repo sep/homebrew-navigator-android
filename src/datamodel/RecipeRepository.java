@@ -85,7 +85,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 				});
 		
 		recipe.Ingredients = getIngredientsText(recipe.Id);
-		recipe.Instructions = getInstructionsText(recipe.Id);
+		recipe.Instructions = getInstructionsText(recipe.Id, recipe.BoilTime);
 		
 		return recipe;
 	}
@@ -106,12 +106,12 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		toBrew.addStep(new TimedStep(recipe.BoilTime, "Boil for " + recipe.BoilTime  + " minutes", true));
 		
 		for(HopTime h : getHopTimes(recipe.Id)) {
-			pairs.add(new StepPair("Add " + h.name + " hops", 60-h.time));
+			pairs.add(new StepPair("Add " + h.name + " hops", recipe.BoilTime - h.time));
 		}	
 		for(MiscTime m: getMiscTimes(recipe.Id)) {
 			pairs.add(new StepPair("Add " + m.name, m.time));
 		}
-		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
+		pairs.add(new StepPair("(Optional) Place wort chiller in wort", recipe.BoilTime - 10));
 
 		Collections.sort(pairs, new StepComparator());
 
@@ -164,7 +164,7 @@ public class RecipeRepository implements Comparator<RECIPE>{
 				});
 	}
 	
-	private String getInstructionsText(long recipeId) {
+	private String getInstructionsText(long recipeId, double boilTime) {
 		StringBuilder builder = new StringBuilder();
 		int cnt = 0;
 
@@ -172,20 +172,20 @@ public class RecipeRepository implements Comparator<RECIPE>{
 		builder.append(MakeInstruction(++cnt, "Heat your water to 150 (F)."));
 		builder.append(MakeInstruction(++cnt, "Place specialty grains in pot."));
 		builder.append(MakeInstruction(++cnt, "Steep for 30 minutes"));
-		builder.append(MakeInstruction(++cnt, "Boil")); // set flag
+		builder.append(MakeInstruction(++cnt, "Boil"));
 		builder.append(MakeInstruction(++cnt, "Add Extract"));
 		builder.append(MakeInstruction(++cnt, "Bring to boil 212 (F)"));
 
 		List<StepPair> pairs = new ArrayList<StepPair>();
 
 		for(HopTime h : getHopTimes(recipeId)) {
-			pairs.add(new StepPair("Add " + h.name + " hops", 60-h.time));
+			pairs.add(new StepPair("Add " + h.name + " hops", boilTime - h.time));
 		}
 
 		for(MiscTime m : getMiscTimes(recipeId)) {
-			pairs.add(new StepPair("Add " + m.name, m.time));
+			pairs.add(new StepPair("Add " + m.name, boilTime - m.time));
 		}
-		pairs.add(new StepPair("(Optional) Place wort chiller in wort", 50));
+		pairs.add(new StepPair("(Optional) Place wort chiller in wort", boilTime - 10));
 
 		Collections.sort(pairs, new StepComparator());
 
@@ -197,8 +197,6 @@ public class RecipeRepository implements Comparator<RECIPE>{
 			boil += time;
 		}
 
-		builder.append(MakeInstruction(++cnt, "(Optional) add moss at XX min"));
-		builder.append(MakeInstruction(++cnt, "(Optional) add wort chiller at 50 min."));
 		builder.append(MakeInstruction(++cnt, "chill wort 70 (F)")); //set flag
 		builder.append(MakeInstruction(++cnt, "transfer"));
 		builder.append(MakeInstruction(++cnt, "pitch yeast"));

@@ -23061,7 +23061,117 @@ Mouthfeel: Medium-light to medium body; never heavy. Suspended yeast may increas
     <DISPLAY_TERTIARY_TEMP>68.0 F</DISPLAY_TERTIARY_TEMP>
     <DISPLAY_AGE_TEMP>52.0 F</DISPLAY_AGE_TEMP>
   </RECIPE>
-
-  
-  
+  <RECIPE>
+    <VERSION>1</VERSION>
+    <NAME>GFI - October-Fester</NAME>
+    <TYPE>Extract</TYPE>
+    <BREWER>jonfuller</BREWER>
+    <BATCH_SIZE>5</BATCH_SIZE>
+    <BOIL_SIZE>3</BOIL_SIZE>
+    <BOIL_TIME>60</BOIL_TIME>
+    <EFFICIENCY>75</EFFICIENCY>
+    <FERMENTATION_STAGES>0</FERMENTATION_STAGES>
+    <NOTES/>
+    <IBU_METHOD>Rager</IBU_METHOD>
+    <STYLE>
+      <VERSION>1</VERSION>
+      <NAME>Oktoberfest &amp; Maerzen</NAME>
+      <CATEGORY>European Amber Lager</CATEGORY>
+      <CATEGORY_NUMBER>3</CATEGORY_NUMBER>
+      <STYLE_LETTER>B</STYLE_LETTER>
+      <TYPE>Lager</TYPE>
+      <STYLE_GUIDE>BJCP</STYLE_GUIDE>
+      <OG_MIN>1.05</OG_MIN>
+      <OG_MAX>1.057</OG_MAX>
+      <FG_MIN>1.012</FG_MIN>
+      <FG_MAX>1.016</FG_MAX>
+      <IBU_MIN>20</IBU_MIN>
+      <IBU_MAX>28</IBU_MAX>
+      <ABV_MIN>4.8</ABV_MIN>
+      <ABV_MAX>5.7</ABV_MAX>
+      <COLOR_MIN>4.8</COLOR_MIN>
+      <COLOR_MAX>5.7</COLOR_MAX>
+    </STYLE>
+    <FERMENTABLES>
+      <FERMENTABLE>
+        <VERSION>1</VERSION>
+        <NAME>Briess Munich LME</NAME>
+        <TYPE>Extract</TYPE>
+        <AMOUNT>2.8916513562</AMOUNT>
+        <YIELD>70</YIELD>
+        <POTENTIAL>1.035</POTENTIAL>
+        <COLOR>8</COLOR>
+      </FERMENTABLE>
+      <FERMENTABLE>
+        <VERSION>1</VERSION>
+        <NAME>Light Munich malt</NAME>
+        <TYPE>Grain</TYPE>
+        <AMOUNT>0.2267961848</AMOUNT>
+        <YIELD>70</YIELD>
+        <POTENTIAL>0</POTENTIAL>
+        <COLOR>0</COLOR>
+      </FERMENTABLE>
+      <FERMENTABLE>
+        <VERSION>1</VERSION>
+        <NAME>Melanoidin Malt</NAME>
+        <TYPE>Grain</TYPE>
+        <AMOUNT>0.2267961848</AMOUNT>
+        <YIELD>70</YIELD>
+        <POTENTIAL>1.037</POTENTIAL>
+        <COLOR>20</COLOR>
+      </FERMENTABLE>
+      <FERMENTABLE>
+        <VERSION>1</VERSION>
+        <NAME>Biscuit Malt</NAME>
+        <TYPE>Grain</TYPE>
+        <AMOUNT>0.2267961848</AMOUNT>
+        <YIELD>70</YIELD>
+        <POTENTIAL>1.035</POTENTIAL>
+        <COLOR>24</COLOR>
+      </FERMENTABLE>
+    </FERMENTABLES>
+    <HOPS>
+      <HOP>
+        <VERSION>1</VERSION>
+        <NAME>Haulertau Germany (Germany)</NAME>
+        <ALPHA>5.25</ALPHA>
+        <AMOUNT>0.0283495231</AMOUNT>
+        <USE>Boil</USE>
+        <TIME>60</TIME>
+        <FORM>Pellet</FORM>
+      </HOP>
+      <HOP>
+        <VERSION>1</VERSION>
+        <NAME>Saaz (Usa)</NAME>
+        <ALPHA>4.5</ALPHA>
+        <AMOUNT>0.0283495231</AMOUNT>
+        <USE>Boil</USE>
+        <TIME>30</TIME>
+        <FORM>Pellet</FORM>
+      </HOP>
+    </HOPS>
+    <YEASTS>
+      <YEAST>
+        <VERSION>1</VERSION>
+        <NAME>Octoberfest Lager Blend 2633</NAME>
+        <TYPE>Lager</TYPE>
+        <FORM>Liquid</FORM>
+        <AMOUNT>1</AMOUNT>
+        <MIN_TEMPERATURE>58</MIN_TEMPERATURE>
+        <FLOCCULATION>Low/Med</FLOCCULATION>
+        <ATTENUATION>75</ATTENUATION>
+      </YEAST>
+    </YEASTS>
+    <MISCS>
+      <MISC>
+        <VERSION>1</VERSION>
+        <NAME>Irish Moss</NAME>
+        <TYPE>Fining</TYPE>
+        <USE>Boil</USE>
+        <AMOUNT>0.00492892159</AMOUNT>
+        <AMOUNT_IS_WEIGHT>FALSE</AMOUNT_IS_WEIGHT>
+        <TIME>20</TIME>
+      </MISC>
+    </MISCS>
+  </RECIPE>
   </RECIPES>

@@ -1,6 +1,8 @@
 package com.example.homebrewnavigator;
 
 import java.io.InputStream;
+
+import utility.UpgradeHelper;
 import datamodel.BeerXmlImporter;
 import android.app.Activity;
 import android.content.Context;

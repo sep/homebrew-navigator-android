@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,15 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import beerxml.RECIPE;
 
-/**
- * This demonstrates the use of action bar tabs and how they interact with other
- * action bar features.
- */
 public class RecipeManagerActivity extends Activity {
-
-	private ProgressDialog mProgressDialog;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -85,32 +77,6 @@ public class RecipeManagerActivity extends Activity {
 		if (savedInstanceState != null) {
 			bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
 		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		BroadcastReceiver br = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				// TODO Auto-generated method stub
-				closeProgressDialog();
-			}
-
-		};
-		// registerReceiver(br);
-		// repository needs to send this broadcast
-
-		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog
-				.setMessage("Please wait while we load recipes for your enjoyment.");
-		//mProgressDialog.show();
-	}
-
-	protected void closeProgressDialog() {
-		mProgressDialog.dismiss();
 	}
 
 	@Override
@@ -199,8 +165,7 @@ public class RecipeManagerActivity extends Activity {
 			public View getView(int position, View convertView, ViewGroup parent) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				// TODO: go make row view
-				// TODO: set details on that row view
+
 				View rowView = inflater.inflate(R.layout.recipe_row_layout, parent, false);
 				TextView textView = (TextView) rowView.findViewById(R.id.recipeName);
 				textView.setText(values.get(position).Name);
