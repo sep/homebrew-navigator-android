@@ -4,9 +4,6 @@ import com.example.homebrewnavigator.BrewDayActivity;
 import com.example.homebrewnavigator.MainActivity;
 import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.R;
-import com.example.homebrewnavigator.R.id;
-import com.example.homebrewnavigator.R.layout;
-
 import datamodel.RecipeRepository;
 import datamodel.RecipeViewModel;
 

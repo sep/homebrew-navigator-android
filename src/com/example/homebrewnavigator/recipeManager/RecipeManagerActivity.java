@@ -4,8 +4,6 @@ package com.example.homebrewnavigator.recipeManager;
 import com.example.homebrewnavigator.MainActivity;
 import com.example.homebrewnavigator.MyContext;
 import com.example.homebrewnavigator.R;
-import com.example.homebrewnavigator.R.id;
-
 import datamodel.RecipeRepository;
 
 import android.app.ActionBar;
