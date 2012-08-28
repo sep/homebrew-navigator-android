@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ActionBar;
-import com.example.homebrewnavigator.bll.Batch;
-import com.example.homebrewnavigator.bll.BatchRepository;
+import datamodel.Batch;
+import datamodel.BatchRepository;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

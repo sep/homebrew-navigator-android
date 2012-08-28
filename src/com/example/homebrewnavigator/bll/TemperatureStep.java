@@ -65,11 +65,4 @@ public class TemperatureStep extends RecipeStep<Integer> {
             bound = false;
         }
     };
-    
-  private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver(){
-	  @Override 
-	  public void onReceive(Context context, Intent intent) {
-		  execute();
-	  };
-  };
 }

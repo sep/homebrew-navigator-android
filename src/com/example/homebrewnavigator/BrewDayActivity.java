@@ -27,11 +27,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.homebrewnavigator.bll.Batch;
-import com.example.homebrewnavigator.bll.BatchRepository;
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
 
+import datamodel.Batch;
+import datamodel.BatchRepository;
 import datamodel.RecipeRepository;
 
 public class BrewDayActivity extends Activity {
