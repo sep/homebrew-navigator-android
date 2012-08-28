@@ -1,4 +1,4 @@
-package com.example.homebrewnavigator;
+package com.example.homebrewnavigator.recipeManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package com.example.homebrewnavigator;
+package com.example.homebrewnavigator.recipeManager;
 
 import android.app.Fragment;
 import android.content.Context;

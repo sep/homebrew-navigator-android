@@ -1,7 +1,12 @@
-package com.example.homebrewnavigator;
+package com.example.homebrewnavigator.journal;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.homebrewnavigator.MainActivity;
+import com.example.homebrewnavigator.R;
+import com.example.homebrewnavigator.R.id;
+import com.example.homebrewnavigator.R.layout;
 
 import android.app.ActionBar;
 import datamodel.Batch;

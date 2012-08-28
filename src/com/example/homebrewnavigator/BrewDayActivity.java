@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.example.homebrewnavigator.bll.Recipe;
 import com.example.homebrewnavigator.bll.RecipeStep;
+import com.example.homebrewnavigator.journal.JournalActivity;
 
 import datamodel.Batch;
 import datamodel.BatchRepository;

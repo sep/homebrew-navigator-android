@@ -1,4 +1,10 @@
-package com.example.homebrewnavigator;
+package com.example.homebrewnavigator.journal;
+
+import com.example.homebrewnavigator.MainActivity;
+import com.example.homebrewnavigator.R;
+import com.example.homebrewnavigator.R.id;
+import com.example.homebrewnavigator.R.layout;
+import com.example.homebrewnavigator.R.menu;
 
 import android.app.ActionBar;
 import android.app.Activity;

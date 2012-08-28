@@ -30,7 +30,7 @@
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".RecipeManagerActivity"
+            android:name=".recipeManager.RecipeManagerActivity"
             android:label="Recipe Manager" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -58,7 +58,7 @@
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".JournalActivity"
+            android:name=".journal.JournalActivity"
             android:label="Journal" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -67,7 +67,7 @@
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".JournalEditDetailsActivity"
+            android:name=".journal.JournalEditDetailsActivity"
             android:label="Journal" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -76,7 +76,7 @@
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".RecipeActivity"
+            android:name=".recipeManager.RecipeActivity"
             android:label="Recipe" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

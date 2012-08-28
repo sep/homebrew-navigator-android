@@ -2,6 +2,9 @@ package com.example.homebrewnavigator;
 
 import java.io.InputStream;
 
+import com.example.homebrewnavigator.journal.JournalActivity;
+import com.example.homebrewnavigator.recipeManager.RecipeManagerActivity;
+
 import utility.UpgradeHelper;
 import datamodel.BeerXmlImporter;
 import android.app.Activity;

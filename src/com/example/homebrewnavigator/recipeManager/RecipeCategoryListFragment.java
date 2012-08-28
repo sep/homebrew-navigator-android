@@ -1,6 +1,11 @@
-package com.example.homebrewnavigator;
+package com.example.homebrewnavigator.recipeManager;
 
 import java.util.List;
+
+import com.example.homebrewnavigator.MyContext;
+import com.example.homebrewnavigator.R;
+import com.example.homebrewnavigator.R.id;
+import com.example.homebrewnavigator.R.layout;
 
 import android.app.Fragment;
 import android.content.Context;
